@@ -1,8 +1,9 @@
-
-
 from typing import List
 
-
+"""
+    `before`: is a lambda expression that receives all the parameters of the function and returns a dictionary with some useful values
+    `after`: is a predicate that receives the result of the function and the dictionary of the predicate `before`
+"""
 def predicate(before, after):
 
 	def inner(func):
@@ -42,6 +43,4 @@ def create_list(x: int, y: int) -> List[int]:
 
 
 assert add_yes(['no', 'no']) == ["no", "no", "yes"]
-
 assert create_list(4,5) == [0, 0, 0, 0, 1, 1, 1, 1, 1]
-
