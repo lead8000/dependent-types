@@ -1,4 +1,5 @@
-from typing import List
+from dataclasses import dataclass
+from typing import Generic, TypeVar, List
 
 """
     `before`: is a lambda expression that receives all the parameters of the function and returns a dictionary with some useful values
@@ -35,12 +36,43 @@ def add_yes(input: List[str]) -> List[str]:
 
 
 @predicate(
-	before = lambda x, y: { "x__y": x + y },
-	after = lambda result, x__y: len(result) == x__y
+	before = lambda x, y : { "x__y": x + y },
+	after = lambda result, x__y : len(result) == x__y
 )
 def create_list(x: int, y: int) -> List[int]:
 	return x * [0] + y * [1]
 
 
+T = TypeVar('T')
+@dataclass
+class Matrix(Generic[T]):
+	matrix: List[List[T]]
+
+
+@predicate(
+	before = lambda matrix : { "is_upper_triangular_matrix": 
+		len([i for i in range(len(matrix.matrix)) 
+				for j in range(len(matrix.matrix)) 
+					if i > j and matrix.matrix[i][j] != 0]) == 0 },
+	after = lambda result, is_upper_triangular_matrix: is_upper_triangular_matrix
+)
+def determinant(matrix: Matrix) -> int:
+	result = 1
+
+	for i in range(len(matrix.matrix)):
+		result *= matrix.matrix[i][i]
+
+	return result
+
+
+matrix = Matrix[int]([ 
+	[1, 2, 3, 4],
+	[0, 2, 4, 6],
+	[0, 0, 3, 6],
+	[0, 0, 0, 4]
+])
+
+
 assert add_yes(['no', 'no']) == ["no", "no", "yes"]
 assert create_list(4,5) == [0, 0, 0, 0, 1, 1, 1, 1, 1]
+assert determinant(matrix) == 24
