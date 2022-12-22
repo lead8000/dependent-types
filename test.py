@@ -1,6 +1,6 @@
 
 from typing import List
-from metaclass import Annotated, axiom
+from metaclass import Annotated, annotated, axiom
 
 class N(metaclass=Annotated): pass
 class M(metaclass=Annotated): pass
@@ -10,10 +10,9 @@ def add_something(n: List[N], item) -> List[N + 1]:
     n.append(item)
     return n
 
-def concatenate_list(n: List[N], m: List[M]) -> List[N + M]:    
-    for item in m:
-        add_something(n, item)
+def wrapper(n: List[N], item) -> List[N+1]:
+    add_something(n, item)
     return n
 
-assert add_something(['no', 'no'], 'yes') == ['no', 'no', 'yes']
-print(add_something.__annotations__)
+assert wrapper(['no', 'no'], 'yes') == ['no', 'no', 'yes']
+
