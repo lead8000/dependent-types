@@ -12,7 +12,7 @@ class LengthVar(type):
 	def __new__(cls, name):
 		# print(cls, name)
 		return super().__new__(cls, name, (), { 
-			# '__init__': lambda self: print(self.a), 
+			# '__repr__': lambda self: self, 
 			# 'a': 100 
 		})
 
@@ -46,10 +46,15 @@ class LengthVar(type):
 	def __eq__(self, other):
 		return self.__name__ == other.__name__
 
-T = LengthVar('3+K')
-K = LengthVar('5+T')
+# T = LengthVar('3+K')
+# K = LengthVar('5+T')
 
-I = LengthVar('K+4')
-J = LengthVar('T+4')
+# I = LengthVar('K+4')
+# J = LengthVar('T+4')
 
-print(T+1 == I)
+# print(type(T))
+# print(type(J))
+
+# L = List[type(T)]
+# print(type(L))
+# print(T+1 == I)

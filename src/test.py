@@ -14,5 +14,3 @@ def concatenate_list(n: List[N], m: List[M]) -> List[N + M]:
     for item in m:
         n = add_something(n, item)
     return n
-
-print(N.__name__)

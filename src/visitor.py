@@ -1,13 +1,16 @@
 import ast
 from functools import reduce
-from typing import Any
+from typing import Any, List
 from metaclass import LengthVar
+from copy import deepcopy
 
 with open("test.py", "r") as source:  
     ast_tree = ast.parse(source.read())
 
-axioms: set = set()
+# axioms: set = set()
 
+# # functions still to be checked
+# unchecked: set = set()
 
 class Visitor(ast.NodeVisitor):
 
@@ -27,7 +30,7 @@ class Visitor(ast.NodeVisitor):
             elif isinstance(value, ast.AST):
                 self.visit(value, ctx)
 
-    def visit_Constant(self, node, ctx = {}):
+    def visit_Constant(self, node: ast.Constant, ctx = {}):
         value = node.value
         type_name = ast._const_node_type_names.get(type(value))
         if type_name is None:
@@ -48,38 +51,70 @@ class Visitor(ast.NodeVisitor):
                 return visitor(node, ctx)
         return self.generic_visit(node, ctx) 
 
-    def visit_FunctionDef(self, node: ast.FunctionDef, ctx = {}) -> Any:
+    def visit_FunctionDef(self, node: ast.FunctionDef, ctx = {}):
         print('FUNCTION')
-        print(ctx)
+        childCtx = deepcopy(ctx)
         if reduce( # check if function is an axiom
             lambda Bool, dec: Bool or dec.id == 'axiom', 
             node.decorator_list, 
             False):
-            axioms.add(node.name)
+            if 'axioms' not in ctx:
+                ctx['axioms'] = set()
+            ctx['axioms'].add(node.name)
         else:
+            if 'unchecked' not in ctx:
+                ctx['unchecked'] = set()
+            ctx['unchecked'].add(node.name)
             for arg in node.args.args:
-                print(arg.annotation.value.id, arg.annotation.slice.id)
+                dtype = childCtx[f'{arg.annotation.slice.id}']
+                # print(dtype)
+                # print(f'{ arg.annotation.value.id }[{dtype}]')
+                childCtx[arg.arg] = deepcopy(dtype) 
             print(ast.dump(node))
-        print()
-        return self.generic_visit(node, ctx)
+            print(ctx)    
 
-    def visit_For(self, node: ast.For, ctx = {}) -> Any:
-        print('FOR')
-        for _node in node.body:
-            print('X veces --- ', ast.dump(_node))
         print()
-        return self.generic_visit(node, ctx)
 
-    def visit_Assign(self, node: ast.Assign, ctx = {}) -> Any:
-        print('ASSIGN')
+        return self.generic_visit(node, childCtx)
+
+    def visit_For(self, node: ast.For, ctx = {}):
+        print('FOR') 
+        print(f'ctx {ctx}')
         print(ast.dump(node))
+        for _node in node.body:
+            if isinstance(_node, ast.Assign):
+                ctx['numberOfTimes'] = ctx[node.iter.id]
+            print(f'{ctx[node.iter.id]} veces --- ', ast.dump(_node))
+            print(_node.targets)
+        print()
+        return self.generic_visit(node, ctx)
+
+    def visit_Assign(self, node: ast.Assign, ctx = {}):
+        print('ASSIGN')
         if node.value.func.id == 'LengthVar':
             lenVar = eval(f'LengthVar(\'{node.value.args[0].value}\')')
             varName=f'{node.targets[0].id}'
             ctx[varName] = lenVar
+        else: 
+            # check if there is cyclic dependency
+            varAssign = node.targets[0].id
+            if varAssign in [arg.id for arg in node.value.args]:
+                numberOfTimes = LengthVar('1')
+                # check if it executes various times
+                if 'numberOfTimes' in ctx:
+                    numberOfTimes = ctx['numberOfTimes']
+                    if isinstance(ctx['numberOfTimes'], str):
+                        numberOfTimes = ctx[numberOfTimes] 
+                    # ctx.__delattr__('numberOfTimes')
+                ctx[varAssign] = ctx[varAssign] + numberOfTimes
+                print(ctx)
+
+        print()
+        return self.generic_visit(node, ctx)
+    
+    def visit_Return(self, node: ast.Return, ctx = {}):
+        print(ast.dump(node))
         return self.generic_visit(node, ctx)
 
 
 Visitor().visit(ast_tree)
-
-# print(axioms)
