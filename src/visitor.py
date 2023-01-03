@@ -4,6 +4,17 @@ from typing import Any, List
 from metaclass import LengthVar
 from copy import deepcopy
 
+
+def visualizer(fnc):
+
+    def decorator(_, node, ctx = {}):        
+        print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
+        print(f'{ast.dump(node)}')
+        fnc(_, node, ctx)
+    
+    return decorator
+
+
 class GenericVisitor(ast.NodeVisitor):
 
     def visit(self, node, ctx = {}):
@@ -21,9 +32,7 @@ class GenericVisitor(ast.NodeVisitor):
                         self.visit(item, ctx)
             elif isinstance(value, ast.AST):
                 self.visit(value, ctx)
-
-class Visitor(GenericVisitor):
-
+    
     def visit_Constant(self, node: ast.Constant, ctx = {}):
         value = node.value
         type_name = ast._const_node_type_names.get(type(value))
@@ -45,8 +54,10 @@ class Visitor(GenericVisitor):
                 return visitor(node, ctx)
         return self.generic_visit(node, ctx) 
 
+class Visitor(GenericVisitor):
+
+    @visualizer
     def visit_FunctionDef(self, node: ast.FunctionDef, ctx = {}):
-        print('FUNCTION')
         childCtx = deepcopy(ctx)
         if reduce( # check if function is an axiom
             lambda Bool, dec: Bool or dec.id == 'axiom', 
@@ -71,10 +82,8 @@ class Visitor(GenericVisitor):
 
         return self.generic_visit(node, childCtx)
 
+    @visualizer
     def visit_For(self, node: ast.For, ctx = {}):
-        print('FOR') 
-        print(f'ctx {ctx}')
-        print(ast.dump(node))
         for _node in node.body:
             if isinstance(_node, ast.Assign):
                 ctx['numberOfTimes'] = ctx[node.iter.id]
@@ -83,8 +92,8 @@ class Visitor(GenericVisitor):
         print()
         return self.generic_visit(node, ctx)
 
+    @visualizer
     def visit_Assign(self, node: ast.Assign, ctx = {}):
-        print('ASSIGN')
         if node.value.func.id == 'LengthVar':
             lenVar = eval(f'LengthVar(\'{node.value.args[0].value}\')')
             varName=f'{node.targets[0].id}'
@@ -105,7 +114,13 @@ class Visitor(GenericVisitor):
 
         print()
         return self.generic_visit(node, ctx)
-    
+
+    @visualizer
     def visit_Return(self, node: ast.Return, ctx = {}):
-        print(ast.dump(node))
+        return self.generic_visit(node, ctx)
+
+class CheckPredicates(GenericVisitor):
+    
+    @visualizer
+    def visit_FunctionDef(self, node: ast.FunctionDef, ctx = {}) -> Any:
         return self.generic_visit(node, ctx)

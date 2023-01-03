@@ -1,4 +1,3 @@
-
 from typing import List
 from metaclass import LengthVar, axiom
 
