@@ -1,16 +1,22 @@
+import ast
+from visitor import Visitor
 
-from typing import List
-from metaclass import LengthVar, axiom
 
-N = LengthVar('N')
-M = LengthVar('M')
+# T = LengthVar('3+K')
+# K = LengthVar('5+T')
 
-@axiom
-def add_something(n: List[N], item) -> List[N + 1]:
-    n.append(item)
-    return n
+# I = LengthVar('K+4')
+# J = LengthVar('T+4')
 
-def concatenate_list(n: List[N], m: List[M]) -> List[N + M]:    
-    for item in m:
-        n = add_something(n, item)
-    return n
+# print(type(T))
+# print(type(J))
+
+# L = List[type(T)]
+# print(type(L))
+# print(T+1 == I)
+
+
+with open("proof.py", "r") as source:  
+    ast_tree = ast.parse(source.read())
+
+Visitor().visit(ast_tree)

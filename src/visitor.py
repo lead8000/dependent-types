@@ -4,15 +4,8 @@ from typing import Any, List
 from metaclass import LengthVar
 from copy import deepcopy
 
-with open("test.py", "r") as source:  
-    ast_tree = ast.parse(source.read())
 
-# axioms: set = set()
-
-# # functions still to be checked
-# unchecked: set = set()
-
-class Visitor(ast.NodeVisitor):
+class GenericVisitor(ast.NodeVisitor):
 
     def visit(self, node, ctx = {}):
         """Visit a node."""
@@ -29,6 +22,9 @@ class Visitor(ast.NodeVisitor):
                         self.visit(item, ctx)
             elif isinstance(value, ast.AST):
                 self.visit(value, ctx)
+
+
+class Visitor(GenericVisitor):
 
     def visit_Constant(self, node: ast.Constant, ctx = {}):
         value = node.value
@@ -115,6 +111,3 @@ class Visitor(ast.NodeVisitor):
     def visit_Return(self, node: ast.Return, ctx = {}):
         print(ast.dump(node))
         return self.generic_visit(node, ctx)
-
-
-Visitor().visit(ast_tree)
