@@ -15,9 +15,4 @@ def concatenate_list(n: List[N], m: List[M]) -> List[N + M]:
         n = add_something(n, item)
     return n
 
-
-# print('jfskjf')
 print(N.__name__)
-
-# assert add_something(['no', 'no'], 'yes') == ['no', 'no', 'yes']
-# print(add_something.__annotations__)

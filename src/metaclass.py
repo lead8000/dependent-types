@@ -1,9 +1,11 @@
 import re
 from typing import List
 
+
 def axiom(func):
 	func.__is_axiom__ = True
 	return func
+
 
 class LengthVar(type):
 
@@ -44,10 +46,10 @@ class LengthVar(type):
 	def __eq__(self, other):
 		return self.__name__ == other.__name__
 
-# T = LengthVar('3+K')
-# K = LengthVar('5+T')
+T = LengthVar('3+K')
+K = LengthVar('5+T')
 
-# I = LengthVar('K+4')
-# J = LengthVar('T+4')
+I = LengthVar('K+4')
+J = LengthVar('T+4')
 
-# print(T+1 == I)
+print(T+1 == I)
