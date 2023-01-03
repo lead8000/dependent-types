@@ -4,7 +4,6 @@ from typing import Any, List
 from metaclass import LengthVar
 from copy import deepcopy
 
-
 class GenericVisitor(ast.NodeVisitor):
 
     def visit(self, node, ctx = {}):
@@ -15,14 +14,13 @@ class GenericVisitor(ast.NodeVisitor):
 
     def generic_visit(self, node, ctx = {}):
         """Called if no explicit visitor function exists for a node."""
-        for field, value in ast.iter_fields(node):
+        for _, value in ast.iter_fields(node):
             if isinstance(value, list):
                 for item in value:
                     if isinstance(item, ast.AST):
                         self.visit(item, ctx)
             elif isinstance(value, ast.AST):
                 self.visit(value, ctx)
-
 
 class Visitor(GenericVisitor):
 
