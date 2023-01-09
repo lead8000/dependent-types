@@ -1,19 +1,16 @@
 import ast
 from functools import reduce
-from typing import Any, List
 from metaclass import LengthVar
 from copy import deepcopy
 
-
-def visualizer(fnc):
+def visualizer(func):
 
     def decorator(_, node, ctx = {}):        
         print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
         print(f'{ast.dump(node)}')
-        fnc(_, node, ctx)
+        func(_, node, ctx)
     
     return decorator
-
 
 class GenericVisitor(ast.NodeVisitor):
 
@@ -122,5 +119,5 @@ class Visitor(GenericVisitor):
 class CheckPredicates(GenericVisitor):
     
     @visualizer
-    def visit_FunctionDef(self, node: ast.FunctionDef, ctx = {}) -> Any:
-        return self.generic_visit(node, ctx)
+    def visit(self, node, ctx={}):
+        return super().visit(node, ctx)

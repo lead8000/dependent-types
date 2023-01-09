@@ -44,12 +44,18 @@ class LengthVar(type):
 	def __eq__(self, other):
 		return self.__name__ == other.__name__
 
+class ForAll(type):
 
-class Predicate(type):
-
-	def __new__(cls, predicate):
-		return super().__new__(cls, 'Predicate', (), { 
+	def __new__(cls, name):
+		return super().__new__(cls, name, (), { 
 			# '__repr__': lambda self: self, 
-			'predicate': predicate 
+			# 'a': 100 
 		})
-	
+
+class ThereExists(type):
+
+	def __new__(cls, name):
+		return super().__new__(cls, name, (), { 
+			# '__repr__': lambda self: self, 
+			# 'a': 100 
+		})

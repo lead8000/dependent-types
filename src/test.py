@@ -1,21 +1,24 @@
+"""
+something
+"""
+
 import ast
+from metaclass import LengthVar
 from visitor import Visitor
+from typing import List
 
-
-# T = LengthVar('3+K')
 # K = LengthVar('5+T')
 
-# I = LengthVar('K+4')
 # J = LengthVar('T+4')
 
-# print(type(T))
-# print(type(J))
-
-# # L = List[type(T)]
-# # print(type(L))
+# T = LengthVar('3+K')
+# I = LengthVar('K+4')
 # print(T+1 == I)
 
-with open("proof.py", "r") as source:  
-    ast_tree = ast.parse(source.read())
+# with open("proof.py", "r") as source:  
+#     ast_tree = ast.parse(source.read())
 
-Visitor().visit(ast_tree)
+# Visitor().visit(ast_tree)
+
+class A:
+    a: 'List[int | (lambda x: x % 2 == 0)]' = []
