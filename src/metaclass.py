@@ -1,4 +1,5 @@
 import re
+import ast
 
 
 def axiom(func):
@@ -47,9 +48,9 @@ class LengthVar(type):
 class ForAll(type):
 
 	def __new__(cls, name):
-		return super().__new__(cls, name, (), { 
+		return super().__new__(cls, "ForAll", (), { 
 			# '__repr__': lambda self: self, 
-			# 'a': 100 
+			'predicate': name
 		})
 
 class ThereExists(type):
