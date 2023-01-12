@@ -2,7 +2,7 @@ import ast
 from functools import reduce
 from metaclass import LengthVar
 from copy import deepcopy
-from ranges import Range
+from ranges import Range, RangeSet
 from ranges import Inf as oo
 
 def visualizer(func):
@@ -119,7 +119,7 @@ class Visitor(GenericVisitor):
         return self.generic_visit(node, ctx)
 
 class CheckPredicates(GenericVisitor):
-    
+
     @visualizer
     def visit(self, type_a, ctx={}):
         return super().visit(type_a, ctx)
@@ -283,21 +283,28 @@ class CheckTypeComposition(GenericVisitor):
         return self.visit(dtype.body, ctx)
 
     def visit_Compare(self, dtype: ast.Compare, ctx={}):
+        print(ast.dump(dtype))
         if isinstance(dtype.left, ast.Attribute):
             ... #TODO
         elif isinstance(dtype.left, ast.Name):
             if isinstance(dtype.ops[0], ast.Lt):
-                ctx[dtype.left.id]["range"].end = dtype.comparators[0].value
+                rng = Range(-oo, dtype.comparators[0].value)
+                ctx[dtype.left.id]["range"] &= rng
             elif isinstance(dtype.ops[0], ast.Gt):
-                ctx[dtype.left.id]["range"].start = dtype.comparators[0].value
+                rng = Range(dtype.comparators[0].value, oo)
+                ctx[dtype.left.id]["range"] &= rng
         elif isinstance(dtype.left, ast.Constant):
             if isinstance(dtype.comparators[0], ast.Attribute):
                 ... #TODO
             elif isinstance(dtype.comparators[0], ast.Name):
                 if isinstance(dtype.ops[0], ast.Lt):
-                    ctx[dtype.comparators[0].id]["range"].start = dtype.left.value
+                    rng = Range(dtype.left.value, oo)
+                    ctx[dtype.comparators[0].id]["range"] &= rng
                 elif isinstance(dtype.ops[0], ast.Gt):
-                    ctx[dtype.comparators[0].id]["range"].end = dtype.left.value
+                    rng = Range(-oo, dtype.left.value)
+                    ctx[dtype.comparators[0].id]["range"] &= rng
 
     def visit_BoolOp(self, dtype: ast.BoolOp, ctx={}):
-        return self.generic_visit(dtype, ctx)
+        if isinstance(dtype.op, ast.And):
+            for value in dtype.values:
+                self.visit(value, ctx)

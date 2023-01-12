@@ -6,7 +6,7 @@ from visitor import CheckTypeComposition
 #     ast_tree = ast.parse(source.read())
 # CheckPredicates().visit(ast_tree)
 
-ast_tree = ast.parse("List[int | (lambda x: x < 50)]")
+ast_tree = ast.parse("List[int | (lambda x: x < 50 and x > 0)]")
 
 ctx_a = {}
 CheckTypeComposition().visit(ast_tree, ctx_a)
