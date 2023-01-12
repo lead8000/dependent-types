@@ -2,7 +2,7 @@ import ast
 from functools import reduce
 from metaclass import LengthVar
 from copy import deepcopy
-from ranges import Range, RangeSet
+from ranges import Range 
 from ranges import Inf as oo
 
 def visualizer(func):
