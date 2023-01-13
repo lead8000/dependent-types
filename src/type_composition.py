@@ -15,8 +15,8 @@ def composes(dt_a, dt_b):
     CheckTypeComposition().visit(ast_b, ctx_b)
     print(ctx_a)
     print(ctx_b)
-    rng_a = ctx_a["x"]["range"]
-    rng_b = ctx_b["x"]["range"]
+    rng_a = ctx_a["range"]
+    rng_b = ctx_b["range"]
 
     if rng_a is None:
         return True
@@ -32,9 +32,14 @@ def composes(dt_a, dt_b):
 
     return rng_b == u
 
-stament = composes(
-    'List[int | (lambda x: (x < 170 and x >= 160) or (x >= 0 and x <= 50) or (x >= 75 and x <= 100))]',
-    'List[float | (lambda x: x >= 0 and x < 170)]'
-)
+# stament = composes(
+#     'List[int | (lambda x: (x < 170 and x >= 160) or (x >= 0 and x <= 50) or (x >= 75 and x <= 100))]',
+#     'List[float | (lambda x: x >= 0 and x < 170)]'
+# )
+# print(stament)
 
-print(stament)
+ctx = {}
+ast_tree = parse("List[Person | (lambda p: p.Age > 0 and p.Grade >= 1 and p.Grade <= 12 and p.Age < 80)]")
+# ast_tree = parse("List[float | (lambda x: x < 10)]")
+CheckTypeComposition().visit(ast_tree, ctx)
+print(ctx)

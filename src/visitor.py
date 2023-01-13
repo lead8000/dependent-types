@@ -1,9 +1,9 @@
 import ast
+from copy import deepcopy
+from ranges import Inf as oo
 from functools import reduce
 from metaclass import LengthVar
-from copy import deepcopy
 from ranges import Range, RangeSet
-from ranges import Inf as oo
 
 def visualizer(func):
 
@@ -71,8 +71,6 @@ class Visitor(GenericVisitor):
             ctx['unchecked'].add(node.name)
             for arg in node.args.args:
                 dtype = childCtx[f'{arg.annotation.slice.id}']
-                # print(dtype)
-                # print(f'{ arg.annotation.value.id }[{dtype}]')
                 childCtx[arg.arg] = deepcopy(dtype) 
             print(ast.dump(node))
             print(ctx)    
@@ -118,15 +116,6 @@ class Visitor(GenericVisitor):
     def visit_Return(self, node: ast.Return, ctx = {}):
         return self.generic_visit(node, ctx)
 
-class CheckPredicates(GenericVisitor):
-
-    @visualizer
-    def visit(self, type_a, ctx={}):
-        return super().visit(type_a, ctx)
-
-    def visit_Expr(self, node: ast.Expr, ctx={}):
-        return self.generic_visit(node, ctx)
-
 class CheckTypeComposition(GenericVisitor):
 
     # @visualizer
@@ -135,14 +124,54 @@ class CheckTypeComposition(GenericVisitor):
 
     def visit_Lambda(self, dtype: ast.Lambda, ctx={}):
         for arg in dtype.args.args:
-            ctx[arg.arg] = { "range": Range(-oo, oo) }
+            ctx[arg.arg] = { }
         return self.visit(dtype.body, ctx)
 
     def visit_Compare(self, dtype: ast.Compare, ctx={}):
-        print(ast.dump(dtype))
+
         if isinstance(dtype.left, ast.Attribute):
-            ... #TODO
+            print(ast.dump(dtype))
+            if isinstance(dtype.comparators[0], ast.Constant):
+                
+                if dtype.left.attr not in ctx[dtype.left.value.id]:
+                    ctx[dtype.left.value.id][dtype.left.attr] = Range(-oo,oo)
+
+                if isinstance(dtype.ops[0], ast.Lt):
+                    if isinstance(dtype.comparators[0], ast.UnaryOp) \
+                        and isinstance(dtype.comparators[0].op, ast.USub):
+                        rng = Range(-oo, -dtype.comparators[0].operand.value, include_start=False, include_end=False)
+                    elif isinstance(dtype.comparators[0], ast.Constant):
+                        rng = Range(-oo, dtype.comparators[0].value, include_start=False, include_end=False)
+                    ctx[dtype.left.value.id][dtype.left.attr] &= rng
+
+                elif isinstance(dtype.ops[0], ast.LtE):
+                    if isinstance(dtype.comparators[0], ast.UnaryOp) \
+                        and isinstance(dtype.comparators[0].op, ast.USub):
+                        rng = Range(-oo, -dtype.comparators[0].operand.value, include_start=False, include_end=True)
+                    elif isinstance(dtype.comparators[0], ast.Constant):
+                        rng = Range(-oo, dtype.comparators[0].value, include_start=False, include_end=True)
+                    ctx[dtype.left.value.id][dtype.left.attr] &= rng
+
+                elif isinstance(dtype.ops[0], ast.Gt):
+                    if isinstance(dtype.comparators[0], ast.UnaryOp) \
+                        and isinstance(dtype.comparators[0].op, ast.USub):
+                        rng = Range(-dtype.comparators[0].operand.value, oo, include_start=False, include_end=False)
+                    elif isinstance(dtype.comparators[0], ast.Constant):
+                        rng = Range(dtype.comparators[0].value, oo, include_start=False, include_end=False)
+                    ctx[dtype.left.value.id][dtype.left.attr] &= rng
+
+                elif isinstance(dtype.ops[0], ast.GtE):
+                    if isinstance(dtype.comparators[0], ast.UnaryOp) \
+                        and isinstance(dtype.comparators[0].op, ast.USub):
+                        rng = Range(-dtype.comparators[0].operand.value, oo, include_start=True, include_end=False)
+                    elif isinstance(dtype.comparators[0], ast.Constant):
+                        rng = Range(dtype.comparators[0].value, oo, include_start=True, include_end=False)
+                    ctx[dtype.left.value.id][dtype.left.attr] &= rng
+
         elif isinstance(dtype.left, ast.Name):
+
+            if "range" not in ctx[dtype.left.id]:
+                ctx[dtype.left.id]["range"] = Range(-oo,oo)
 
             if isinstance(dtype.ops[0], ast.Lt):
                 if isinstance(dtype.comparators[0], ast.UnaryOp) \
@@ -183,6 +212,9 @@ class CheckTypeComposition(GenericVisitor):
             
             elif isinstance(dtype.comparators[0], ast.Name):
 
+                if "range" not in ctx[dtype.comparators[0].id]:
+                    ctx[dtype.comparators[0].id]["range"] = Range(-oo,oo)
+
                 if isinstance(dtype.ops[0], ast.Gt):
                     if isinstance(dtype.comparators[0], ast.UnaryOp) \
                         and isinstance(dtype.comparators[0].op, ast.USub):
@@ -214,14 +246,6 @@ class CheckTypeComposition(GenericVisitor):
                     elif isinstance(dtype.comparators[0], ast.Constant):
                         rng = Range(dtype.comparators[0].value, oo, include_start=True, include_end=False)
                     ctx[dtype.comparators[0].id]["range"] &= rng
-
-
-                # if isinstance(dtype.ops[0], ast.Lt):
-                #     rng = Range(dtype.left.value, oo)
-                #     ctx[dtype.comparators[0].id]["range"] &= rng
-                # elif isinstance(dtype.ops[0], ast.Gt):
-                #     rng = Range(-oo, dtype.left.value)
-                #     ctx[dtype.comparators[0].id]["range"] &= rng
 
     def visit_BoolOp(self, dtype: ast.BoolOp, ctx={}):
         if isinstance(dtype.op, ast.And):
