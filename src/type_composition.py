@@ -38,8 +38,18 @@ def composes(dt_a, dt_b):
 # )
 # print(stament)
 
+from typing import List
+class Person: 
+    pass
+
+def do_something(
+        a: "List[float | (lambda x: x < 10 and x >= -23)]",
+        b: "List[Person | (lambda p: p.Age > 0 and p.Grade >= 1 and p.Grade <= 12 and p.Age < 80)]"
+    ):
+    pass
+
 ctx = {}
+ast_tree = parse("List[float | (lambda x: x < 10 and x >= -23)]")
 ast_tree = parse("List[Person | (lambda p: p.Age > 0 and p.Grade >= 1 and p.Grade <= 12 and p.Age < 80)]")
-# ast_tree = parse("List[float | (lambda x: x < 10)]")
 CheckTypeComposition().visit(ast_tree, ctx)
 print(ctx)
