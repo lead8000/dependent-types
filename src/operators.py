@@ -9,7 +9,7 @@ class BinOp(AST):
     """
         Binary operator
     """
-    def __new__(cls, left, right):
+    def __new__(cls, *_):
         print(f'\n{cls.__name__}_Node')
         return super().__new__(cls, f'{cls.__name__}_Node', (), {})
 
@@ -23,6 +23,14 @@ class BinOp(AST):
 
 class BitOr(BinOp):
     
+    def __eq__(self, other) -> AST:
+        self.right = Eq(self.right, other)
+        return self
+
+    def __ne__(self, other) -> AST:
+        self.right = Ne(self.right, other)
+        return self
+    
     def __lt__(self, other) -> AST:
         self.right = Lt(self.right, other)
         return self
@@ -30,6 +38,15 @@ class BitOr(BinOp):
     def __gt__(self, other) -> AST:
         self.right = Gt(self.right, other)
         return self
+
+    def __le__(self, other) -> AST:
+        self.right = Le(self.right, other)
+        return self
+
+    def __ge__(self, other) -> AST:
+        self.right = Ge(self.right, other)
+        return self
+   
 
 class Lt(BinOp):
     def eval(self):
@@ -39,13 +56,21 @@ class Gt(BinOp):
     def eval(self):
         return self.left.value > self.right.value
 
-class Le(BinOp):...
+class Le(BinOp):
+    def eval(self):
+        return self.left.value <= self.right.value
 
-class Ge(BinOp):...
+class Ge(BinOp):
+    def eval(self):
+        return self.left.value >= self.right.value
 
-class Eq(BinOp):...
+class Eq(BinOp):
+    def eval(self):
+        return self.left.value == self.right.value
 
-class Ne(BinOp):...
+class Ne(BinOp):
+    def eval(self):
+        return self.left.value != self.right.value
 
 class Add(BinOp):...
 
