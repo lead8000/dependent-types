@@ -56,11 +56,11 @@ class Predicate(type):
 
 class Checkable(type):
     def __instancecheck__(self, __instance) -> bool:
-        #print(f'\n\nCHECK INSTANCE\n\nPREDICATE = {self.predicate.left}\n\nINSTANCE = {__instance}\n\n')
+        print(f'\n\nCHECK INSTANCE\n\nPREDICATE = {self.predicate}\n\nINSTANCE = {__instance}\n\n')
         for dtype in self.dtypes:
-            # #print(dtype.__dict__)
+            print(dtype.__dict__)
             dtype.value = __instance.__getattribute__(dtype.attr)
-        #print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
+        print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
         predicate = self.predicate.eval()
         for dtype in self.dtypes:
             dtype.value = None
@@ -72,7 +72,7 @@ class Subcriptable(type):
         i = 0
         dtypes = []
         predicate = None
-        #print('SUBCRITABLE')  
+        print('SUBCRITABLE')  
 
         while i < len(item) and isinstance(item[i], AST):
             if isinstance(item[i], BitOr):
@@ -82,9 +82,9 @@ class Subcriptable(type):
                 dtypes.append(item[i])
             i += 1
 
-        #print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate.__dict__}')
-        #print(predicate.left.__dict__)
-        #print('\n\n')
+        print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}')
+        print(predicate.__dict__)
+        print('\n\n')
         
         _dict = { k: v for k, v in cls.__dict__.items() }
         _dict['dtypes'] = dtypes

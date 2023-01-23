@@ -39,34 +39,71 @@ class BitOr(BinOp):
     def __ge__(self, other) -> AST:
         self.right = Ge(self.right, other)
         return self
+    @visualizer
+    def __and__(self, other) -> AST:
+        self.right = And(self.right, other)
+        return self
 
-class Lt(BinOp):
+class And(BinOp):
+    @visualizer
+    def eval(self):
+        return self.left.eval() and self.right.eval()
+    @visualizer
+    def __and__(self, other):
+        return And(self, other)
+    @visualizer
+    def __or__(self, other):
+        return Or(self, other)
+
+class Or(BinOp):
+    @visualizer
+    def eval(self):
+        return self.left.eval() or self.right.eval()
+    @visualizer
+    def __and__(self, other):
+        return And(self, other)
+    @visualizer
+    def __or__(self, other):
+        return Or(self, other)
+
+class Statement(BinOp):
+    """
+        Binary operator for declaring truth values.
+    """
+    @visualizer
+    def __and__(self, other):
+        return And(self, other)
+    @visualizer
+    def __or__(self, other):
+        return Or(self, other)
+
+class Lt(Statement):
     @visualizer
     def eval(self):
         return self.left.eval() < self.right.eval()
 
-class Gt(BinOp):
+class Gt(Statement):
     @visualizer
     def eval(self):
         return self.left.eval() > self.right.eval()
 
-class Le(BinOp):
+class Le(Statement):
     @visualizer
     def eval(self):
         return self.left.eval() <= self.right.eval()
 
-class Ge(BinOp):
+class Ge(Statement):
     @visualizer
     def eval(self):
         return self.left.eval() >= self.right.eval()
 
-class Eq(BinOp):
+class Eq(Statement):
     @visualizer
     def eval(self):
         print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
         return self.left.eval() == self.right.eval()
 
-class Ne(BinOp):
+class Ne(Statement):
     @visualizer
     def eval(self):
         #print(self.left, self.right)
