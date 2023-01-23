@@ -14,9 +14,25 @@ class Constant(AST):
     def __add__(self, other):
         return Constant(self.value + other.value)
     @visualizer
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: 'Constant') -> bool:
         print(self, other)
         return self.value == other.value
+    @visualizer
+    def __ne__(self, other: 'Constant') -> bool:
+        return self.value != other.value
+    @visualizer
+    def __lt__(self, other: 'Constant') -> AST:
+        return self.value < other.value
+    @visualizer
+    def __gt__(self, other: 'Constant') -> bool:
+        print(self, other)
+        return self.value > other.value
+    @visualizer
+    def __le__(self, other: 'Constant') -> bool:
+        return self.value <= other.value
+    @visualizer
+    def __ge__(self, other: 'Constant') -> AST:
+        return self.value >= other.value
 
 class Num(Constant):...
 

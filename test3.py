@@ -14,7 +14,7 @@ N = Attribute(Matrix, 'amount_rows')
 M = Attribute(Matrix, 'amount_cols')
 
 m = Matrix([[23,43],[95,2],[93,12],[3,53]])
-if isinstance(m, Matrix[ N, M | N == M + 2 ]):
+if isinstance(m, Matrix[ N, M | N > M ]):
     print('YEESSSS')
 else:
     print('NOOOOOO')
