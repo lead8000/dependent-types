@@ -1,45 +1,5 @@
+from dependent_types.ast.base import AST, visualizer
 
-from abc import abstractmethod
-
-def visualizer(fn):
-    def inner(*args):
-        print('\n\n\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        print(f'\nFUNCTION {fn.__name__.upper()}\n\n')
-        print(f'ARGS:\n')
-        for arg in args:
-            print(f'TYPEOF({arg})={type(arg)}') 
-            print(f'dict({arg})={arg.__dict__}\n')
-        result = fn(*args)
-        print(f'\n\nRESULT ==> {result}\n\n')
-        print(f'\nENDED {fn.__name__.upper()}\n\n')
-        return result
-    return inner
-
-class AST(type):
-    @abstractmethod
-    def eval(self):...
-
-class Constant(AST):
-    """
-        Constant node.
-    """
-    def __new__(self, literal):
-        return super().__new__(self, f'Constant_{literal}', (), {'value': literal})
-    @visualizer
-    def eval(self):
-        return self
-    @visualizer
-    def __add__(self, other):
-        return Constant(self.value + other.value)
-    @visualizer
-    def __eq__(self, other) -> bool:
-        print(self, other)
-        return self.value == other.value
-    
-
-class Num(Constant):...
-
-class Bool(Constant):...
 
 class BinOp(AST):
     """

@@ -1,4 +1,4 @@
-from metaclass import DependentType, Attribute
+from dependent_types.metaclass import DependentType, Attribute
 
 class Matrix(metaclass=DependentType):
 
