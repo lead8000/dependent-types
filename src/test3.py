@@ -1,7 +1,7 @@
 from metaclass import DependentType, Attribute, Predicate
 
 class Matrix(metaclass=DependentType):
-    
+
     def __init__(self, l):
         self.list = l
         self.amount_rows = len(l)
