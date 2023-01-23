@@ -1,5 +1,5 @@
 import re
-from types import UnionType
+from operators import AST, BitOr, Lt, Gt, Le, Ge, Eq, Ne, Add, Sub, Mul, TrueDiv, FloorDiv, Mod, Pow
 
 def axiom(func):
     func.__is_axiom__ = True
@@ -50,135 +50,177 @@ class Predicate(type):
     def __call__(self, *args, **kwds):
         return self.__call__(*args, **kwds)
 
-class Attribute(type):
+def visualizer(fn):
+    def inner(self, other):
+        print(f'\nTYPEOF({self})={type(self)}') 
+        print(f'\ndict({self})={self.__dict__}')
+        print(f'\nTYPEOF({other})={type(other)}')
+        print(f'\ndict({other})={other.__dict__}')
+        result = fn(self,other)
+        print(f'\nfunc {fn.__name__.upper()} ==> {result}\n')
+        return result
+    return inner
 
+class Num(AST):
+    """
+        Number node.
+    """
+    def __new__(self, number):
+        return super().__new__(self, f'Literal_{number}', (), {'value': number})
+
+class Attr(AST):
+    """
+        Attribute node.
+    """
     def __new__(self, cls, attr):
+        print(self, cls, attr)
         return super().__new__(self, f"{cls.__name__}_{attr}", (), {})
 
     def __init__(self, cls, attr):
+        cls.attrs.append(self)
         self.cls = cls
         self.attr = attr
-
-    def __eq__(self, other: 'Attribute') -> bool:
-        print(self.attr_value, other.attr_value)
-        return self.attr_value == other.attr_value
-
-    def __ne__(self, other: 'Attribute') -> bool:
-        return self.attr_value != other.attr_value
-
-    def __lt__(self, other: 'Attribute') -> bool:
-        return self.attr_value < other.attr_value
-
-    def __gt__(self, other: 'Attribute') -> bool:
-        return self.attr_value > other.attr_value
-
-    def __le__(self, other: 'Attribute') -> bool:
-        return self.attr_value <= other.attr_value
-
-    def __ge__(self, other: 'Attribute') -> bool:
-        return self.attr_value >= other.attr_value
-
-    def __add__(self, other) -> bool:
-        if isinstance(other, Attribute):
-            self.attr_value += other.attr_value
-        elif isinstance(other, int):
-            self.attr_value += other
-        return self
-
-    def __sub__(self, other) -> bool:
-        if isinstance(other, Attribute):
-            self.attr_value -= other.attr_value
-        elif isinstance(other, int):
-            self.attr_value -= other
-        return self
-
-    def __mul__(self, other) -> bool:
-        if isinstance(other, Attribute):
-            self.attr_value *= other.attr_value
-        elif isinstance(other, int):
-            self.attr_value *= other
-        return self
-
-    def __truediv__(self, other) -> bool:
-        if isinstance(other, Attribute):
-            self.attr_value /= other.attr_value
-        elif isinstance(other, int):
-            self.attr_value /= other
-        return self
-
-    def __floordiv__(self, other) -> bool:
-        if isinstance(other, Attribute):
-            self.attr_value //= other.attr_value
-        elif isinstance(other, int):
-            self.attr_value //= other
-        return self
-
-    def __mod__(self, other) -> bool:
-        if isinstance(other, Attribute):
-            self.attr_value %= other.attr_value
-        elif isinstance(other, int):
-            self.attr_value %= other
-        return self
-
-    def __pow__(self, other) -> bool:
-        if isinstance(other, Attribute):
-            self.attr_value **= other.attr_value
-        elif isinstance(other, int):
-            self.attr_value **= other
-        return self
- 
-    def __radd__(self, other) -> bool:
+    
+    def __or__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return BitOr(self, other)
+    
+    def __eq__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Eq(self, other)
+    
+    def __ne__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Ne(self, other)
+    
+    def __lt__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Lt(self, other)
+    
+    def __gt__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Gt(self, other)
+    
+    def __le__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Le(self, other)
+    
+    def __ge__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Ge(self, other)
+    
+    def __add__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Add(self, other)
+    
+    def __sub__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Sub(self, other)
+    
+    def __mul__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Mul(self, other)
+    
+    def __truediv__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return TrueDiv(self, other)
+    
+    def __floordiv__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return FloorDiv(self, other)
+    
+    def __mod__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Mod(self, other)
+    
+    def __pow__(self, other: 'Attr') -> AST:
+        if isinstance(other, (int, float)):
+            other = Num(other)
+        return Pow(self, other)
+    
+    def __radd__(self, other: 'Attr') -> AST:
         return self + other
-
-    def __rsub__(self, other) -> bool:
+    
+    def __rsub__(self, other: 'Attr') -> AST:
         return self - other
-
-    def __rmul__(self, other) -> bool:
+    
+    def __rmul__(self, other: 'Attr') -> AST:
         return self * other
-
-    def __rtruediv__(self, other) -> bool:
+    
+    def __rtruediv__(self, other: 'Attr') -> AST:
         return self / other
-
-    def __rfloordiv__(self, other) -> bool:
+    
+    def __rfloordiv__(self, other: 'Attr') -> AST:
         return self // other
-
-    def __rmod__(self, other) -> bool:
+    
+    def __rmod__(self, other: 'Attr') -> AST:
         return self % other
-
-    def __rpow__(self, other) -> bool:
+    
+    def __rpow__(self, other: 'Attr') -> AST:
         return self ** other
+
+# define an alias
+Attribute = Attr
 
 class Checkable(type):
     def __instancecheck__(self, __instance) -> bool:
         for dtype in self.dtypes:
-            dtype.attr_value = __instance.__getattribute__(dtype.attr)
-        predicate = self.predicate()
-        dtype.attr_value = None
+            print(dtype.__dict__)
+            dtype.value = __instance.__getattribute__(dtype.attr)
+        print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
+        predicate = self.predicate.eval()
+        for dtype in self.dtypes:
+            dtype.value = None
         return predicate
 
 class Subcriptable(type):
 
-    def __class_getitem__(cls, item):
+    def __class_getitem__(self, cls, item):
         i = 0
         dtypes = []
-        predicate = None      
-        while isinstance(item[i], Attribute):
-            dtypes.append(item[i])
+        predicate = None
+        print('SUBCRITABLE')  
+
+        while i < len(item) and isinstance(item[i], AST):
+            if isinstance(item[i], BitOr):
+                dtypes.append(item[i].left)
+                predicate = item[i].right
+            else: 
+                dtypes.append(item[i])
             i += 1
-        else:
-            if isinstance(item[i], UnionType):
-                if isinstance(item[i].__args__[0], Attribute) \
-                    and isinstance(item[i].__args__[1], Predicate):
-                    dtypes.append(item[i].__args__[0])
-                    predicate = item[i].__args__[1]
 
-        newcls = DependentType.__new__(cls, cls.__name__, (), {
-            'dtypes': dtypes,
-            'predicate': predicate
-        })
+        print(f'\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}\n\n')
+        
+        _dict = { k: v for k, v in cls.__dict__.items() }
+        _dict['dtypes'] = dtypes
+        _dict['predicate'] = predicate
 
+        newcls = DependentType.__new__(self, self.__name__, (), _dict)
+        print(self,cls,item)
+        print(newcls.__dict__)
         return newcls
+
+    def __getitem__(cls, item):
+        return cls.__class_getitem__(cls, item)
 
 class DependentType(Checkable,Subcriptable):
     def __new__(cls, name, *subclasses):
         return super().__new__(cls, name, *subclasses)
+    
+    def __init__(cls, name, *subclasses, **dict) -> None:
+        # print(cls, name, *subclasses, **dict)
+        cls.attrs = []
+        

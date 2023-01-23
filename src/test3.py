@@ -1,4 +1,4 @@
-from metaclass import DependentType, Attribute, Predicate
+from metaclass import DependentType, Attribute
 
 class Matrix(metaclass=DependentType):
 
@@ -13,6 +13,8 @@ class Matrix(metaclass=DependentType):
 N = Attribute(Matrix, 'amount_rows')
 M = Attribute(Matrix, 'amount_cols')
 
-m = Matrix([[9,4],[4,3],[5,5],[43,5]])
-print(f'm={m.list}')
-print(f'isinstance(m, Matrix[N, M | Predicate(lambda: N == M)]): {isinstance(m, Matrix[N, M | Predicate(lambda: 2 * N < 3 + M)])}')
+m = Matrix([[23,43],[95,2],[93,12],[3,53]])
+if isinstance(m, Matrix[ N, M | N < M ]):
+    print('YEESSSS')
+else:
+    print('NOOOOOO')
