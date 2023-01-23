@@ -5,7 +5,6 @@ def axiom(func):
     func.__is_axiom__ = True
     return func
 
-
 class LengthVar(type):
 
     def __new__(cls, name):
@@ -41,7 +40,6 @@ class LengthVar(type):
     def __eq__(self, other):
         return self.__name__ == other.__name__
 
-
 class Predicate(type):
 
     def __new__(cls, predicate):
@@ -51,7 +49,6 @@ class Predicate(type):
 
     def __call__(self, *args, **kwds):
         return self.__call__(*args, **kwds)
-
 
 class Attribute(type):
 
@@ -129,7 +126,27 @@ class Attribute(type):
         elif isinstance(other, int):
             self.attr_value **= other
         return self
+ 
+    def __radd__(self, other) -> bool:
+        return self + other
 
+    def __rsub__(self, other) -> bool:
+        return self - other
+
+    def __rmul__(self, other) -> bool:
+        return self * other
+
+    def __rtruediv__(self, other) -> bool:
+        return self / other
+
+    def __rfloordiv__(self, other) -> bool:
+        return self // other
+
+    def __rmod__(self, other) -> bool:
+        return self % other
+
+    def __rpow__(self, other) -> bool:
+        return self ** other
 
 class Checkable(type):
     def __instancecheck__(self, __instance) -> bool:
@@ -139,8 +156,7 @@ class Checkable(type):
         dtype.attr_value = None
         return predicate
 
-
-class Subcriptable(type):    
+class Subcriptable(type):
 
     def __class_getitem__(cls, item):
         i = 0
@@ -163,8 +179,6 @@ class Subcriptable(type):
 
         return newcls
 
-
 class DependentType(Checkable,Subcriptable):
     def __new__(cls, name, *subclasses):
         return super().__new__(cls, name, *subclasses)
-

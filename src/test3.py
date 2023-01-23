@@ -15,4 +15,4 @@ M = Attribute(Matrix, 'amount_cols')
 
 m = Matrix([[9,4],[4,3],[5,5],[43,5]])
 print(f'm={m.list}')
-print(f'isinstance(m, Matrix[N, M | Predicate(lambda: N == M)]): {isinstance(m, Matrix[N, M | Predicate(lambda: (N - 1) // 2  < M ** 2)])}')
+print(f'isinstance(m, Matrix[N, M | Predicate(lambda: N == M)]): {isinstance(m, Matrix[N, M | Predicate(lambda: 2 * N < 3 + M)])}')
