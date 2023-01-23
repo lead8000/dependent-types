@@ -13,6 +13,6 @@ class Matrix(metaclass=DependentType):
 N = Attribute(Matrix, 'amount_rows')
 M = Attribute(Matrix, 'amount_cols')
 
-m = Matrix([[9,4,2,4],[4,1,7,3],[3,5,1,5],[6,0,43,5]])
+m = Matrix([[9,4],[4,3],[5,5],[43,5]])
 print(f'm={m.list}')
-print(f'isinstance(m, Matrix[N, M | Predicate(lambda: N == M)]): {isinstance(m, Matrix[N, M | Predicate(lambda: N == M)])}')
+print(f'isinstance(m, Matrix[N, M | Predicate(lambda: N == M)]): {isinstance(m, Matrix[N, M | Predicate(lambda: (N - 1) // 2  < M ** 2)])}')

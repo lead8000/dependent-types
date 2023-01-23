@@ -62,18 +62,82 @@ class Attribute(type):
         self.cls = cls
         self.attr = attr
 
-    def __eq__(self, __o: object) -> bool:
-        return self.attr_value == __o.attr_value
+    def __eq__(self, other: 'Attribute') -> bool:
+        print(self.attr_value, other.attr_value)
+        return self.attr_value == other.attr_value
+
+    def __ne__(self, other: 'Attribute') -> bool:
+        return self.attr_value != other.attr_value
+
+    def __lt__(self, other: 'Attribute') -> bool:
+        return self.attr_value < other.attr_value
+
+    def __gt__(self, other: 'Attribute') -> bool:
+        return self.attr_value > other.attr_value
+
+    def __le__(self, other: 'Attribute') -> bool:
+        return self.attr_value <= other.attr_value
+
+    def __ge__(self, other: 'Attribute') -> bool:
+        return self.attr_value >= other.attr_value
+
+    def __add__(self, other) -> bool:
+        if isinstance(other, Attribute):
+            self.attr_value += other.attr_value
+        elif isinstance(other, int):
+            self.attr_value += other
+        return self
+
+    def __sub__(self, other) -> bool:
+        if isinstance(other, Attribute):
+            self.attr_value -= other.attr_value
+        elif isinstance(other, int):
+            self.attr_value -= other
+        return self
+
+    def __mul__(self, other) -> bool:
+        if isinstance(other, Attribute):
+            self.attr_value *= other.attr_value
+        elif isinstance(other, int):
+            self.attr_value *= other
+        return self
+
+    def __truediv__(self, other) -> bool:
+        if isinstance(other, Attribute):
+            self.attr_value /= other.attr_value
+        elif isinstance(other, int):
+            self.attr_value /= other
+        return self
+
+    def __floordiv__(self, other) -> bool:
+        if isinstance(other, Attribute):
+            self.attr_value //= other.attr_value
+        elif isinstance(other, int):
+            self.attr_value //= other
+        return self
+
+    def __mod__(self, other) -> bool:
+        if isinstance(other, Attribute):
+            self.attr_value %= other.attr_value
+        elif isinstance(other, int):
+            self.attr_value %= other
+        return self
+
+    def __pow__(self, other) -> bool:
+        if isinstance(other, Attribute):
+            self.attr_value **= other.attr_value
+        elif isinstance(other, int):
+            self.attr_value **= other
+        return self
 
 
 class Checkable(type):
     def __instancecheck__(self, __instance) -> bool:
         for dtype in self.dtypes:
             dtype.attr_value = __instance.__getattribute__(dtype.attr)
-            # print(dtype.__dict__)
-        # print(f'!!!!!!!!!!!\n{self.__dict__}\n!!!!!!!!!!!')   
-        # print(f'????????????\n{__instance.__dict__}\n??????????????')
-        return self.predicate()
+        predicate = self.predicate()
+        dtype.attr_value = None
+        return predicate
 
 
 class Subcriptable(type):    
