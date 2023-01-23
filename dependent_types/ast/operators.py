@@ -1,4 +1,5 @@
 from dependent_types.ast.base import AST, visualizer
+import dependent_types.ast as ast
 
 
 class BinOp(AST):
@@ -54,6 +55,12 @@ class And(BinOp):
     @visualizer
     def __or__(self, other):
         return Or(self, other)
+    # @visualizer
+    # def __rand__(self, other):
+    #     return And(self, other)
+    # @visualizer
+    # def __ror__(self, other):
+    #     return Or(self, other)
 
 class Or(BinOp):
     @visualizer
@@ -65,6 +72,14 @@ class Or(BinOp):
     @visualizer
     def __or__(self, other):
         return Or(self, other)
+    # @visualizer
+    # def __rand__(self, other):
+    #     return And(self, other)
+    @visualizer
+    def __ror__(self, other):
+        if isinstance(other, (int, float)):
+            other = ast.Constant(other)
+            return BitOr(other, self)
 
 class Statement(BinOp):
     """

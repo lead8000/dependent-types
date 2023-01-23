@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-# VISUALIZE = True
-VISUALIZE = False
+VISUALIZE = True
+# VISUALIZE = False
 
 def visualizer(fn):
     def inner(*args):
@@ -11,7 +11,7 @@ def visualizer(fn):
             print(f'ARGS:\n')
             for arg in args:
                 print(f'TYPEOF({arg})={type(arg)}') 
-                print(f'dict({arg})={arg.__dict__}\n')
+                # print(f'dict({arg})={arg.__dict__}\n')
         result = fn(*args)
         if VISUALIZE:
             print(f'\n\nRESULT ==> {result}\n\n')

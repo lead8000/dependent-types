@@ -1,9 +1,9 @@
 import re
 from dependent_types.ast.operators import AST, BitOr
-from dependent_types.ast.literals import Attr
+from dependent_types.ast.literals import Attr, Constant
 
 # define an alias
-def SetAttr(cls, attr):
+def GetAttr(cls, attr):
     attribute = None
     for _attr in cls.attrs:
         if _attr.attr == attr:
@@ -11,7 +11,7 @@ def SetAttr(cls, attr):
             break
     if attribute is None:
         attribute = Attr(attr)
-        cls.attrs.append(attribute)
+        # cls.attrs.append(attribute)
     return attribute
 
 def axiom(func):
@@ -65,17 +65,35 @@ class Predicate(type):
 
 class Checkable(type):
     def __instancecheck__(self, __instance) -> bool:
+        
+        for attr in self.attrs:
+            attr.value = __instance.__getattribute__(attr.attr)
+
         print(f'\n\nCHECK INSTANCE\n\nPREDICATE = {self.predicate}\n\nINSTANCE = {__instance}\n\n')
         for dtype in self.dtypes:
-            print(dtype.__dict__)
-            dtype.value = __instance.__getattribute__(dtype.attr)
+            if isinstance(dtype, Attr):
+                dtype.value = __instance.__getattribute__(dtype.attr)
+
+        print(f'\n\n{self.attrs}\n{self.dtypes}\n\n')
+        if len(self.attrs) != len(self.dtypes):
+            return False
+
+        for attr, dtype in zip(self.attrs, self.dtypes):
+            if attr.value != dtype.value:
+                print(f'\n\n{attr.__class__}\n{dtype.__class__}\n\n')
+                return False
+        
         if self.predicate:
             print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
             predicate = self.predicate.eval()
-            for dtype in self.dtypes:
-                dtype.value = None
-            return predicate
-        return True
+
+        for attr in self.attrs:
+            attr.value = None
+
+        for dtype in self.dtypes:
+            dtype.value = None
+        
+        return predicate if self.predicate else True
 
 class Subcriptable(type):
 
@@ -83,13 +101,17 @@ class Subcriptable(type):
         i = 0
         dtypes = []
         predicate = None
-        print('SUBCRITABLE')  
+        print('SUBCRIPTABLE')  
 
-        while i < len(item) and isinstance(item[i], AST):
+        while i < len(item):
             if isinstance(item[i], BitOr):
+                print('@@@@@@@@@@@@@@ BITOR @@@@@@@@@@@@@@@@')
+                print(item[i].left, item[i].right)
                 dtypes.append(item[i].left)
                 predicate = item[i].right
-            else: 
+            elif isinstance(item[i], (int,float)):
+                dtypes.append(Constant(item[i]))
+            elif isinstance(item[i], AST): 
                 dtypes.append(item[i])
             i += 1
 
@@ -102,8 +124,8 @@ class Subcriptable(type):
         _dict['predicate'] = predicate
 
         newcls = DependentType.__new__(self, self.__name__, (), _dict)
-        #print(self,cls,item)
-        #print(newcls.__dict__)
+        # print(self,cls,item)
+        print(newcls.__dict__)
         return newcls
 
     def __getitem__(cls, item):
