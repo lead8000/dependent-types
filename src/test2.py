@@ -10,13 +10,13 @@ from visitor import CheckTypeComposition
 
 # ctx_a = {}
 # CheckTypeComposition().visit(ast_tree, ctx_a)
-# print(ctx_a)
+# #print(ctx_a)
 
 # ast_tree = ast.parse("List[int | (lambda x: x < 100)]")
 
 # ctx_b = {}
 # CheckTypeComposition().visit(ast_tree, ctx_b)
-# print(ctx_b)
+# #print(ctx_b)
 
 # from copy import deepcopy
 
@@ -45,11 +45,11 @@ from visitor import CheckTypeComposition
 # i = rng_a & rng_b
 # d = rng_a - rng_b
 
-# print(f"union {u}")
-# print(f"intersection {i}")
-# print(f"difference {d}")
+# #print(f"union {u}")
+# #print(f"intersection {i}")
+# #print(f"difference {d}")
 
-# print(rng_b == u)
+# #print(rng_b == u)
 
 # rg1 = Range(1, 10)
 # rg2 = Range(3, 6)
@@ -59,18 +59,18 @@ from visitor import CheckTypeComposition
 # rg5 = Range(8, 15)
 # rg6 = rg4 | rg5
 # rg7 = rg3 & rg6
-# print(rg7)
+# #print(rg7)
 
-# print('test')
+# #print('test')
 # a = Range(1,3) #| Range(4, 9))
 from ranges import Inf as oo
 
 a = RangeSet(Range(1,3))
-print(a)
+#print(a)
 a.add(Range(6,7))
 a.add(Range(8,9))
-print(a)
+#print(a)
 a.add(Range(7,8))
-print(a)
+#print(a)
 a.add(Range(3,6))
-print(a)
+#print(a)

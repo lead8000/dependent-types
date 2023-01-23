@@ -46,8 +46,8 @@ class Range:
 
           >>> e = Range(3, 5)
           >>> f = Range(3, 5, include_start=False, include_end=True)
-          >>> print(e)  # [3, 5)
-          >>> print(f)  # (3, 5]
+          >>> #print(e)  # [3, 5)
+          >>> #print(f)  # (3, 5]
 
         4. From the keyword arguments `start` and/or `end`.
           `start` and `end`
@@ -72,15 +72,15 @@ class Range:
 
         >>> import datetime
         >>> m = Range(datetime.date(1478, 11, 1), datetime.date(1834, 7, 15))
-        >>> print(datetime.date(1492, 8, 3) in m)  # True
-        >>> print(datetime.date(1979, 8, 17) in m)  # False
+        >>> #print(datetime.date(1492, 8, 3) in m)  # True
+        >>> #print(datetime.date(1979, 8, 17) in m)  # False
 
         and strings (using lexicographic comparisons):
 
         >>> n = Range("killer", "rabbit")
-        >>> print("grenade" in n)  # False
-        >>> print("pin" in n)  # True
-        >>> print("three" in n)  # False
+        >>> #print("grenade" in n)  # False
+        >>> #print("pin" in n)  # True
+        >>> #print("three" in n)  # False
 
         or any other comparable type.
 
@@ -96,18 +96,18 @@ class Range:
         then contain every value that can possibly be contained in a Range:
 
         >>> q = Range(include_end=True)
-        >>> print(q)  # [-inf, inf]
-        >>> print(0 in q)  # True
-        >>> print(1 in q)  # True
-        >>> print(-99e99 in q)  # True
-        >>> print("one" in q)  # True
-        >>> print(datetime.date(1975, 3, 14) in q)  # True
-        >>> print(None in q)  # True
+        >>> #print(q)  # [-inf, inf]
+        >>> #print(0 in q)  # True
+        >>> #print(1 in q)  # True
+        >>> #print(-99e99 in q)  # True
+        >>> #print("one" in q)  # True
+        >>> #print(datetime.date(1975, 3, 14) in q)  # True
+        >>> #print(None in q)  # True
 
         Although, for numeric types, infinity automatically conforms to the
         mathematical infinity of IEEE 754:
 
-        >>> print(float('nan') in q)  # False
+        >>> #print(float('nan') in q)  # False
 
         Mathematically, infinity and negative infinity would always be
         exclusive. However, since they are defined values in the floating-
@@ -115,9 +115,9 @@ class Range:
         with regard to inclusivity or exclusivity in Range objects:
 
         >>> r = Range(include_start=True, include_end=False)
-        >>> print(r)  # [-inf, inf)
-        >>> print(float('-inf') in r)  # True
-        >>> print(float('inf') in r)  # False
+        >>> #print(r)  # [-inf, inf)
+        >>> #print(float('-inf') in r)  # True
+        >>> #print(float('inf') in r)  # False
 
         The Range class is hashable, meaning it can be used as the key in a
         `dict`.

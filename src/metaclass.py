@@ -1,5 +1,5 @@
 import re
-from operators import AST, BitOr, Lt, Gt, Le, Ge, Eq, Ne, Add, Sub, Mul, TrueDiv, FloorDiv, Mod, Pow
+from operators import AST, BitOr, Num, Lt, Gt, Le, Ge, Eq, Ne, Add, Sub, Mul, TrueDiv, FloorDiv, Mod, Pow, Constant
 
 def axiom(func):
     func.__is_axiom__ = True
@@ -50,36 +50,21 @@ class Predicate(type):
     def __call__(self, *args, **kwds):
         return self.__call__(*args, **kwds)
 
-def visualizer(fn):
-    def inner(self, other):
-        print(f'\nTYPEOF({self})={type(self)}') 
-        print(f'\ndict({self})={self.__dict__}')
-        print(f'\nTYPEOF({other})={type(other)}')
-        print(f'\ndict({other})={other.__dict__}')
-        result = fn(self,other)
-        print(f'\nfunc {fn.__name__.upper()} ==> {result}\n')
-        return result
-    return inner
-
-class Num(AST):
-    """
-        Number node.
-    """
-    def __new__(self, number):
-        return super().__new__(self, f'Literal_{number}', (), {'value': number})
-
 class Attr(AST):
     """
         Attribute node.
     """
     def __new__(self, cls, attr):
-        print(self, cls, attr)
+        #print(self, cls, attr)
         return super().__new__(self, f"{cls.__name__}_{attr}", (), {})
 
     def __init__(self, cls, attr):
         cls.attrs.append(self)
         self.cls = cls
         self.attr = attr
+
+    def eval(self):
+        return Constant(self.value)
     
     def __or__(self, other: 'Attr') -> AST:
         if isinstance(other, (int, float)):
@@ -177,10 +162,11 @@ Attribute = Attr
 
 class Checkable(type):
     def __instancecheck__(self, __instance) -> bool:
+        #print(f'\n\nCHECK INSTANCE\n\nPREDICATE = {self.predicate.left}\n\nINSTANCE = {__instance}\n\n')
         for dtype in self.dtypes:
-            print(dtype.__dict__)
+            # #print(dtype.__dict__)
             dtype.value = __instance.__getattribute__(dtype.attr)
-        print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
+        #print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
         predicate = self.predicate.eval()
         for dtype in self.dtypes:
             dtype.value = None
@@ -192,7 +178,7 @@ class Subcriptable(type):
         i = 0
         dtypes = []
         predicate = None
-        print('SUBCRITABLE')  
+        #print('SUBCRITABLE')  
 
         while i < len(item) and isinstance(item[i], AST):
             if isinstance(item[i], BitOr):
@@ -202,15 +188,17 @@ class Subcriptable(type):
                 dtypes.append(item[i])
             i += 1
 
-        print(f'\n\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}\n\n')
+        #print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate.__dict__}')
+        #print(predicate.left.__dict__)
+        #print('\n\n')
         
         _dict = { k: v for k, v in cls.__dict__.items() }
         _dict['dtypes'] = dtypes
         _dict['predicate'] = predicate
 
         newcls = DependentType.__new__(self, self.__name__, (), _dict)
-        print(self,cls,item)
-        print(newcls.__dict__)
+        #print(self,cls,item)
+        #print(newcls.__dict__)
         return newcls
 
     def __getitem__(cls, item):
@@ -221,6 +209,6 @@ class DependentType(Checkable,Subcriptable):
         return super().__new__(cls, name, *subclasses)
     
     def __init__(cls, name, *subclasses, **dict) -> None:
-        # print(cls, name, *subclasses, **dict)
+        # #print(cls, name, *subclasses, **dict)
         cls.attrs = []
         

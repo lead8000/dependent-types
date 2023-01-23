@@ -13,8 +13,8 @@ def composes(dt_a, dt_b):
     ctx_b = {}
     CheckTypeComposition().visit(ast_a, ctx_a)
     CheckTypeComposition().visit(ast_b, ctx_b)
-    print(ctx_a)
-    print(ctx_b)
+    #print(ctx_a)
+    #print(ctx_b)
     rng_a = ctx_a["range"]
     rng_b = ctx_b["range"]
 
@@ -36,7 +36,7 @@ def composes(dt_a, dt_b):
 #     'List[int | (lambda x: (x < 170 and x >= 160) or (x >= 0 and x <= 50) or (x >= 75 and x <= 100))]',
 #     'List[float | (lambda x: x >= 0 and x < 170)]'
 # )
-# print(stament)
+# #print(stament)
 
 from typing import List
 class Person: 
@@ -52,4 +52,4 @@ ctx = {}
 ast_tree = parse("List[float | (lambda x: x < 10 and x >= -23)]")
 ast_tree = parse("List[Person | (lambda p: p.Age > 0 and p.Grade >= 1 and p.Grade <= 12 and p.Age < 80)]")
 CheckTypeComposition().visit(ast_tree, ctx)
-print(ctx)
+#print(ctx)
