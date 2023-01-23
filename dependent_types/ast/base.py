@@ -1,7 +1,7 @@
 from abc import abstractmethod
 
-VISUALIZE = True
-# VISUALIZE = False
+# VISUALIZE = True
+VISUALIZE = False
 
 def visualizer(fn):
     def inner(*args):

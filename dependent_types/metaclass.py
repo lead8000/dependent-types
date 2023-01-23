@@ -3,7 +3,16 @@ from dependent_types.ast.operators import AST, BitOr
 from dependent_types.ast.literals import Attr
 
 # define an alias
-Attribute = Attr
+def SetAttr(cls, attr):
+    attribute = None
+    for _attr in cls.attrs:
+        if _attr.attr == attr:
+            attribute = _attr
+            break
+    if attribute is None:
+        attribute = Attr(attr)
+        cls.attrs.append(attribute)
+    return attribute
 
 def axiom(func):
     func.__is_axiom__ = True
@@ -60,11 +69,13 @@ class Checkable(type):
         for dtype in self.dtypes:
             print(dtype.__dict__)
             dtype.value = __instance.__getattribute__(dtype.attr)
-        print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
-        predicate = self.predicate.eval()
-        for dtype in self.dtypes:
-            dtype.value = None
-        return predicate
+        if self.predicate:
+            print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
+            predicate = self.predicate.eval()
+            for dtype in self.dtypes:
+                dtype.value = None
+            return predicate
+        return True
 
 class Subcriptable(type):
 
@@ -83,7 +94,7 @@ class Subcriptable(type):
             i += 1
 
         print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}')
-        print(predicate.__dict__)
+        print(predicate)
         print('\n\n')
         
         _dict = { k: v for k, v in cls.__dict__.items() }
@@ -99,10 +110,16 @@ class Subcriptable(type):
         return cls.__class_getitem__(cls, item)
 
 class DependentType(Checkable,Subcriptable):
-    def __new__(cls, name, *subclasses):
-        return super().__new__(cls, name, *subclasses)
+    def __new__(self, name, *subclasses):
+        return super().__new__(self, name, *subclasses)
     
-    def __init__(cls, name, *subclasses, **dict) -> None:
-        # #print(cls, name, *subclasses, **dict)
-        cls.attrs = []
-        
+    def __init__(self, name, *subclasses, **dict) -> None:
+        self.attrs = []
+
+    def __ior__(self, attr):
+        self.attrs.append(Attr(attr))
+        return self
+
+    def __ilshift__(self, predicate):
+        self.predicate = predicate
+        return self

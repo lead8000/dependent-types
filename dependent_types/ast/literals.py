@@ -60,13 +60,10 @@ class Attr(AST):
     """
         Attribute node.
     """
-    def __new__(self, cls, attr):
-        #print(self, cls, attr)
-        return super().__new__(self, f"{cls.__name__}_{attr}", (), {})
+    def __new__(self, attr):
+        return super().__new__(self, f"Attr_{attr}", (), {})
 
-    def __init__(self, cls, attr):
-        cls.attrs.append(self)
-        self.cls = cls
+    def __init__(self, attr):
         self.attr = attr
 
     def eval(self):
@@ -162,3 +159,13 @@ class Attr(AST):
     
     def __rpow__(self, other: 'Attr') -> AST:
         return self ** other
+
+class AttrVar(AST):
+    """
+        Attribute node.
+    """
+    def __new__(self, name):
+        return super().__new__(self, f"AttrVar_{name}", (), {})
+
+    def __init__(self, name):
+        self.name = name
