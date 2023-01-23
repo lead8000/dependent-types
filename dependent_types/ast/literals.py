@@ -11,8 +11,26 @@ class Constant(AST):
     def eval(self):
         return self
     @visualizer
-    def __add__(self, other):
+    def __add__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value + other.value)
+    @visualizer
+    def __sub__(self, other: 'Constant') -> 'Constant':
+        return Constant(self.value - other.value)
+    @visualizer
+    def __mul__(self, other: 'Constant') -> 'Constant':
+        return Constant(self.value * other.value)
+    @visualizer
+    def __truediv__(self, other: 'Constant') -> 'Constant':
+        return Constant(self.value / other.value)
+    @visualizer
+    def __floordiv__(self, other: 'Constant') -> 'Constant':
+        return Constant(self.value // other.value)
+    @visualizer
+    def __mod__(self, other: 'Constant') -> 'Constant':
+        return Constant(self.value % other.value)
+    @visualizer
+    def __pow__(self, other: 'Constant') -> 'Constant':
+        return Constant(self.value ** other.value)
     @visualizer
     def __eq__(self, other: 'Constant') -> bool:
         print(self, other)
@@ -21,7 +39,7 @@ class Constant(AST):
     def __ne__(self, other: 'Constant') -> bool:
         return self.value != other.value
     @visualizer
-    def __lt__(self, other: 'Constant') -> AST:
+    def __lt__(self, other: 'Constant') -> bool:
         return self.value < other.value
     @visualizer
     def __gt__(self, other: 'Constant') -> bool:
