@@ -1,4 +1,5 @@
-from .generic import GenericVisitor
+from .generic import GenericVisitor, visualizer
+from .type_composition import CheckTypeComposition
 
-__all__ = ["GenericVisitor"]
+__all__ = ["GenericVisitor", "visualizer", "CheckTypeComposition"]
 name = "dtypes.visitor"

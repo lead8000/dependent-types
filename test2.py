@@ -1,6 +1,6 @@
 from matrix import Matrix
 from dtypes import GetAttr
-from dtypes.visitor.generic import GenericVisitor
+from dtypes.visitor import CheckTypeComposition
 
 
 m = Matrix([[23,3,5,43],[95,5],[93,12],[55,53]])
@@ -19,4 +19,4 @@ print(expr)
 #     print('NOOOOOO')
 
 
-GenericVisitor().visit(expr)
+CheckTypeComposition().visit(expr)

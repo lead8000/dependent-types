@@ -1,17 +1,14 @@
 from dtypes.ast import AST
 
-VISUALIZER = True
-VISUALIZER = False
-
-def visualizer(func):
-
-    def decorator(_, node, ctx = {}):        
-        if VISUALIZER:
-            print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
-            print(f'{node._fields}')
-        func(_, node, ctx)
-    
-    return decorator
+def visualizer(visualize = True):
+    def inner(func):
+        def decorator(_, node, ctx = {}):        
+            if visualize:
+                print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
+                print(f'{node._fields}')
+            func(_, node, ctx)
+        return decorator
+    return inner
 
 def iter_fields(node):
     """
@@ -25,7 +22,7 @@ def iter_fields(node):
             pass
 
 class GenericVisitor:
-    @visualizer
+
     def visit(self, node, ctx = {}):
         """Visit a node."""
         method = 'visit_' + node.__class__.__name__
