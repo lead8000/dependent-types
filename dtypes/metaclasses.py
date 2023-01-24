@@ -122,9 +122,13 @@ class Checkable(type):
             for var, rng in rng_b.items()            
         }
 
-        u = rng_a | rng_b
+        print(rng_a, rng_b)
 
-        return rng_b == u
+        u = rng_a['var_0'] | rng_b['var_0']
+
+        print(rng_a, rng_b, u)
+
+        return rng_b['var_0'] == u
 
 class Subcriptable(type):
 
