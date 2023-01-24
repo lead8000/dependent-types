@@ -5,13 +5,12 @@ class BinOp(AST):
     """
         Binary operator
     """
-    def __new__(cls, *_):
-        ##print(f'\n{cls.__name__}_Node')
-        return super().__new__(cls, f'{cls.__name__}_Node', (), {})
+    def __new__(cls, right, left, **dict):
+        return super().__new__(cls, f'{cls.__name__}_Node', right=right, left=left, **dict)
 
     def __init__(self, left, right):
         ##print(f'\nINIT={self} LEFT={left} RIGHT={right}\n')
-        self.left  = left
+        self.left = left
         self.right = right
 
 class BitOr(BinOp):

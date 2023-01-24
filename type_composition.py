@@ -1,6 +1,6 @@
 from ast import parse
 from ranges import Range, RangeSet
-from visitor import CheckTypeComposition
+from dtypes.visitor import CheckTypeComposition
 
 def composes(dt_a, dt_b):
     """
@@ -13,8 +13,8 @@ def composes(dt_a, dt_b):
     ctx_b = {}
     CheckTypeComposition().visit(ast_a, ctx_a)
     CheckTypeComposition().visit(ast_b, ctx_b)
-    #print(ctx_a)
-    #print(ctx_b)
+    print(ctx_a)
+    print(ctx_b)
     rng_a = ctx_a["x"]["range"]
     rng_b = ctx_b["x"]["range"]
 
@@ -36,7 +36,7 @@ stament = composes(
     'List[int | (lambda x: (x < 170 and x >= 160) or (x >= 0 and x <= 50) or (x >= 75 and x <= 100))]',
     'List[float | (lambda x: x >= 0 and x < 170)]'
 )
-##print(stament)
+print(stament)
 
 from typing import List
 class Person: 

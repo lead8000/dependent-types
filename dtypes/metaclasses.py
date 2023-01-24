@@ -95,7 +95,7 @@ class Checkable(type):
 
     def __subclasscheck__(self, __subclass) -> bool:
         print('\n\nPINGAAAAAAAAAAA\n')
-        print(self, __subclass)
+        print(f'\n{self.__dict__}\n\n{__subclass.__dict__}\n')
 
 class Subcriptable(type):
 

@@ -6,7 +6,9 @@ class Constant(AST):
         Constant node.
     """
     def __new__(self, literal):
-        return super().__new__(self, f'Constant_{literal}', (), {'value': literal})
+        return super().__new__(self, f'Constant_{literal}', value=literal)
+    def __init__(self, literal):
+        self.value = literal
     @visualizer
     def eval(self):
         return self
@@ -61,7 +63,7 @@ class Attr(AST):
         Attribute node.
     """
     def __new__(self, attr):
-        return super().__new__(self, f"Attr_{attr}", (), {})
+        return super().__new__(self, f"Attr_{attr}")
 
     def __init__(self, attr):
         self.attr = attr
