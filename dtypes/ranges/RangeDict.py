@@ -3,7 +3,9 @@ from .RangeSet import RangeSet
 
 
 class RangeDict:
-
+    """
+        RangeDict handles relationships between dictionaries with stored Ranges.
+    """
     def __init__(self, __dict):
         self.dict = {
             var: RangeSet(rng) if isinstance(rng, Range) else rng   
