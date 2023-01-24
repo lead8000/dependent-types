@@ -11,7 +11,11 @@ M = GetAttr(Matrix, 'amount_cols')
 
 # expr = (2*N > M) | ( (M != 1) & (N % 2 == 1) ) | (M > 50)
 
-if issubclass(Matrix[ N | ( N > 50 ) ], Matrix[ N | ( N > 100) ]):
+class A:...
+class B(A):...
+assert issubclass(B, A)
+
+if issubclass(Matrix[ N | ( N > 100 ) ], Matrix[ N | ( N != 50 ) ]):
     print('YEESSSS')
 else:
     print('NOOOOOO')

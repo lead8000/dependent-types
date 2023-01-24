@@ -100,7 +100,7 @@ class Checkable(type):
         dt_a = __subclass.predicate
         ctx_a = { 'vars': {}, 'ranges': {} }
         ctx_result_a = CheckTypeComposition().visit(dt_a, ctx_a)
-        
+
         dt_b = self.predicate
         ctx_b = { 'vars': { k:v for k,v in ctx_result_a['vars'].items() }, 'ranges': {} }
         ctx_result_b = CheckTypeComposition().visit(dt_b, ctx_b)
@@ -116,11 +116,7 @@ class Checkable(type):
         rng_a = RangeDict(rng_a)
         rng_b = RangeDict(rng_b)
 
-        print(rng_a, rng_b)
-
         u = rng_a | rng_b
-
-        print(rng_a, rng_b, u)
 
         return rng_b == u
 

@@ -13,7 +13,7 @@ class CheckTypeComposition(GenericVisitor):
     def visit_Gt(self, dtype, ctx = {}):
 
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
-
+            print(dtype.left, dtype.right)
             ctx_copy = deepcopy(ctx)
             if dtype.left.attr not in ctx_copy['vars']:
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
@@ -23,10 +23,74 @@ class CheckTypeComposition(GenericVisitor):
             
             return ctx_copy
 
-    # def visit_Or(self, dtype, ctx = {}):
-    #     ...
+    def visit_Lt(self, dtype, ctx = {}):
+        
+        if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
+            print(dtype.left, dtype.right)
+            ctx_copy = deepcopy(ctx)
+            if dtype.left.attr not in ctx_copy['vars']:
+                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
-    # def visit_Lt(self, dtype, ctx = {}):
+            var = ctx_copy['vars'][dtype.left.attr]
+            ctx_copy['ranges'][var] = Range(-oo, dtype.right.value, include_start=False)
+            
+            return ctx_copy
+
+    def visit_Ge(self, dtype, ctx = {}):
+
+        if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
+
+            ctx_copy = deepcopy(ctx)
+            if dtype.left.attr not in ctx_copy['vars']:
+                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
+
+            var = ctx_copy['vars'][dtype.left.attr]
+            ctx_copy['ranges'][var] = Range(dtype.right.value, oo)
+            
+            return ctx_copy
+
+    def visit_Le(self, dtype, ctx = {}):
+        
+        if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
+
+            ctx_copy = deepcopy(ctx)
+            if dtype.left.attr not in ctx_copy['vars']:
+                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
+
+            var = ctx_copy['vars'][dtype.left.attr]
+            ctx_copy['ranges'][var] = Range(-oo, dtype.right.value, include_start=False, include_end=True)
+            
+            return ctx_copy
+
+    def visit_Eq(self, dtype, ctx = {}):
+        
+        if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
+
+            ctx_copy = deepcopy(ctx)
+            if dtype.left.attr not in ctx_copy['vars']:
+                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
+
+            var = ctx_copy['vars'][dtype.left.attr]
+            ctx_copy['ranges'][var] = Range(dtype.right.value, dtype.right.value, include_end=True)
+            
+            return ctx_copy
+
+    def visit_Ne(self, dtype, ctx = {}):
+        
+        if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
+
+            ctx_copy = deepcopy(ctx)
+            if dtype.left.attr not in ctx_copy['vars']:
+                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
+
+            var = ctx_copy['vars'][dtype.left.attr]
+            ctx_copy['ranges'][var] = RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
+
+            return ctx_copy
+
+    
+
+    # def visit_Or(self, dtype, ctx = {}):
     #     ...
 
     # def visit_Attr(self, dtype, ctx = {}):
