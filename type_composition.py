@@ -1,6 +1,6 @@
 from ast import parse
 from ranges import Range, RangeSet
-from dtypes.visitor import CheckTypeComposition
+from dtypes._visitor import CheckTypeComposition
 
 def composes(dt_a, dt_b):
     """

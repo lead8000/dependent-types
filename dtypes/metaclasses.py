@@ -1,5 +1,7 @@
 import re
 from dtypes.ast import AST, Attr, BitOr, Constant
+from dtypes.visitor import CheckTypeComposition
+from ranges import Range, RangeSet
 
 def GetAttr(cls, attr):
     attribute = None
@@ -94,8 +96,35 @@ class Checkable(type):
         return predicate if self.predicate else True
 
     def __subclasscheck__(self, __subclass) -> bool:
-        print('\n\nPINGAAAAAAAAAAA\n')
-        print(f'\n{self.__dict__}\n\n{__subclass.__dict__}\n')
+
+        dt_a = __subclass.predicate
+        ctx_a = { 'vars': {}, 'ranges': {} }
+        ctx_result_a = CheckTypeComposition().visit(dt_a, ctx_a)
+        
+        dt_b = self.predicate
+        ctx_b = { 'vars': { k:v for k,v in ctx_result_a['vars'].items() }, 'ranges': {} }
+        ctx_result_b = CheckTypeComposition().visit(dt_b, ctx_b)
+
+        rng_a = ctx_result_a['ranges']
+        rng_b = ctx_result_b['ranges']
+
+        if len(rng_a) == 0:
+            return True
+        elif len(rng_b) == 0:
+            return False
+
+        rng_a = {
+            var: RangeSet(rng) if isinstance(rng, Range) else rng 
+            for var, rng in rng_a.items()            
+        }
+        rng_b = {
+            var: RangeSet(rng) if isinstance(rng, Range) else rng 
+            for var, rng in rng_b.items()            
+        }
+
+        u = rng_a | rng_b
+
+        return rng_b == u
 
 class Subcriptable(type):
 
@@ -105,22 +134,26 @@ class Subcriptable(type):
         predicate = None
         #print('SUBCRIPTABLE')  
 
-        while i < len(item):
-            if isinstance(item[i], BitOr):
-                #print('@@@@@@@@@@@@@@ BITOR @@@@@@@@@@@@@@@@')
-                #print(item[i].left, item[i].right)
-                dtypes.append(item[i].left)
-                predicate = item[i].right
-            elif isinstance(item[i], (int,float)):
-                dtypes.append(Constant(item[i]))
-            elif isinstance(item[i], AST): 
-                dtypes.append(item[i])
-            i += 1
+        if isinstance(item, BitOr):
+            dtypes.append(item.left)
+            predicate = item.right
+        else:
+            while i < len(item):
+                if isinstance(item[i], BitOr):
+                    #print('@@@@@@@@@@@@@@ BITOR @@@@@@@@@@@@@@@@')
+                    #print(item[i].left, item[i].right)
+                    dtypes.append(item[i].left)
+                    predicate = item[i].right
+                elif isinstance(item[i], (int,float)):
+                    dtypes.append(Constant(item[i]))
+                elif isinstance(item[i], AST): 
+                    dtypes.append(item[i])
+                i += 1
 
-        #print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}')
-        #print(predicate)
-        #print('\n\n')
-        
+            #print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}')
+            #print(predicate)
+            #print('\n\n')
+            
         _dict = { k: v for k, v in cls.__dict__.items() }
         _dict['dtypes'] = dtypes
         _dict['predicate'] = predicate
