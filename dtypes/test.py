@@ -3,7 +3,7 @@ something
 """
 
 import ast
-from metaclass import LengthVar
+from dtypes.metaclasses import LengthVar
 from visitor import Visitor
 from typing import List
 

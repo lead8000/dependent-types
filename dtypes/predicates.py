@@ -1,4 +1,4 @@
-from metaclass import ForAll
+# from dependent_types.metaclasses import ForAll
 from typing import List
 
 def intersection(

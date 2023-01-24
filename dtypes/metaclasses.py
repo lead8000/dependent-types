@@ -1,6 +1,5 @@
 import re
-from dependent_types.ast.operators import AST, BitOr
-from dependent_types.ast.literals import Attr, Constant
+from dtypes.ast_nodes import AST, Attr, BitOr, Constant
 
 # define an alias
 def GetAttr(cls, attr):
@@ -94,6 +93,10 @@ class Checkable(type):
             dtype.value = None
         
         return predicate if self.predicate else True
+
+    def __subclasscheck__(self, __subclass) -> bool:
+        print('\n\nPINGAAAAAAAAAAA\n')
+        print(self, __subclass)
 
 class Subcriptable(type):
 

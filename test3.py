@@ -1,5 +1,4 @@
-from dependent_types.metaclass import DependentType, GetAttr
-from dependent_types.ast.literals import AttrVar
+from dtypes import DependentType, GetAttr
 
 class Matrix(metaclass=DependentType):
 
@@ -12,23 +11,20 @@ class Matrix(metaclass=DependentType):
     def __len__(self):
         return sum([len(row) for row in self.list])
 
-# N = AttrVar('N')
-# M = AttrVar('M')
-
 Matrix |= 'amount_rows'
 Matrix |= 'amount_cols'
 
 print(Matrix.__dict__)
 # Matrix <<= (N > 2 * M) & (N <= M + 1) | (N == 1)
 
-m = Matrix([[23,3,5,43],[95,5,76,2],[0,23,93,12],[55,2,3,53]])
+m = Matrix([[23,3,5,43],[95,5],[93,12],[55,53]])
 
 N = GetAttr(Matrix, 'amount_rows')
 M = GetAttr(Matrix, 'amount_cols')
 
-if isinstance(m, Matrix[ N, 4 | ( (N > 2 * M) & (N <= M + 1) | (M != 4) ) ]):
+# if isinstance(m, Matrix[ N, 4 | ( (N > 2 * M) & (N <= M + 1) | (M != 4) ) ]):
+
+if issubclass(Matrix[ N, M | ( 2*N > M ) ], Matrix[ N, M | ( N > M ) ]):
     print('YEESSSS')
 else:
     print('NOOOOOO')
-
-# Matrix[N, M | (N == 2 * M) & (N == M + 1)]

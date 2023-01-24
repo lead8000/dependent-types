@@ -1,5 +1,5 @@
 from typing import List
-from metaclass import LengthVar, axiom, ForAll, ThereExists
+from dtypes.metaclasses import LengthVar, axiom 
 
 N = LengthVar('N')
 M = LengthVar('M')
@@ -14,5 +14,5 @@ def concatenate_list(n: List[N], m: List[M]) -> List[N + M]:
         n = add_something(n, item)
     return n
 
-a: 'List[int | ForAll(lambda x: x % 2 == 0)]'
-b: List[int | ThereExists(lambda x: x % 3 == 1)]
+# a: 'List[int | ForAll(lambda x: x % 2 == 0)]'
+# b: 'List[int | ThereExists(lambda x: x % 3 == 1)]'

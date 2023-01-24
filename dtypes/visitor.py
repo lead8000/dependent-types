@@ -2,7 +2,7 @@ import ast
 from copy import deepcopy
 from ranges import Inf as oo
 from functools import reduce
-from metaclass import LengthVar
+# from dependent_types.metaclasses import LengthVar
 from ranges import Range, RangeSet
 
 def visualizer(func):
@@ -99,7 +99,7 @@ class Visitor(GenericVisitor):
             # check if there is cyclic dependency
             varAssign = node.targets[0].id
             if varAssign in [arg.id for arg in node.value.args]:
-                numberOfTimes = LengthVar('1')
+                # numberOfTimes = LengthVar('1')
                 # check if it executes various times
                 if 'numberOfTimes' in ctx:
                     numberOfTimes = ctx['numberOfTimes']
@@ -262,6 +262,4 @@ class CheckTypeComposition(GenericVisitor):
                     first = False
                 else:
                     rngs.add(tmp_ctx["x"]["range"])
-            #print("!!!!!!!!!!!!!")
-            #print(f'{rngs}')
             ctx["x"]["range"] = rngs._ranges.first.value
