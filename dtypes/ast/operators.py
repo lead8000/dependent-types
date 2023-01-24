@@ -1,16 +1,16 @@
 from .base import AST, visualizer
-import ast_nodes as ast
+import dtypes.ast as ast
 
 class BinOp(AST):
     """
         Binary operator
     """
     def __new__(cls, *_):
-        #print(f'\n{cls.__name__}_Node')
+        ##print(f'\n{cls.__name__}_Node')
         return super().__new__(cls, f'{cls.__name__}_Node', (), {})
 
     def __init__(self, left, right):
-        #print(f'\nINIT={self} LEFT={left} RIGHT={right}\n')
+        ##print(f'\nINIT={self} LEFT={left} RIGHT={right}\n')
         self.left  = left
         self.right = right
 
@@ -114,19 +114,19 @@ class Ge(Statement):
 class Eq(Statement):
     @visualizer
     def eval(self):
-        print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
+        #print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
         return self.left.eval() == self.right.eval()
 
 class Ne(Statement):
     @visualizer
     def eval(self):
-        #print(self.left, self.right)
+        ##print(self.left, self.right)
         return self.left.eval() != self.right.eval()
 
 class Add(BinOp):
     @visualizer
     def eval(self):
-        print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
+        #print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
         return self.left.eval() + self.right.eval()
 
 class Sub(BinOp):

@@ -14,7 +14,7 @@ class Matrix(metaclass=DependentType):
 Matrix |= 'amount_rows'
 Matrix |= 'amount_cols'
 
-print(Matrix.__dict__)
+#print(Matrix.__dict__)
 # Matrix <<= (N > 2 * M) & (N <= M + 1) | (N == 1)
 
 m = Matrix([[23,3,5,43],[95,5],[93,12],[55,53]])

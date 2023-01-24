@@ -7,4 +7,4 @@ __all__ = [
     "Add", "Sub", "Mul", "TrueDiv", "FloorDiv", "Eq",
     "Ne", "Lt", "Le", "Gt", "Ge", "Mod", "Pow"
 ]
-name = "ast_nodes"
+name = "dtypes.ast"

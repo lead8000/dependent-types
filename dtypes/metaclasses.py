@@ -1,7 +1,6 @@
 import re
-from dtypes.ast_nodes import AST, Attr, BitOr, Constant
+from dtypes.ast import AST, Attr, BitOr, Constant
 
-# define an alias
 def GetAttr(cls, attr):
     attribute = None
     for _attr in cls.attrs:
@@ -68,22 +67,22 @@ class Checkable(type):
         for attr in self.attrs:
             attr.value = __instance.__getattribute__(attr.attr)
 
-        print(f'\n\nCHECK INSTANCE\n\nPREDICATE = {self.predicate}\n\nINSTANCE = {__instance}\n\n')
+        #print(f'\n\nCHECK INSTANCE\n\nPREDICATE = {self.predicate}\n\nINSTANCE = {__instance}\n\n')
         for dtype in self.dtypes:
             if isinstance(dtype, Attr):
                 dtype.value = __instance.__getattribute__(dtype.attr)
 
-        print(f'\n\n{self.attrs}\n{self.dtypes}\n\n')
+        #print(f'\n\n{self.attrs}\n{self.dtypes}\n\n')
         if len(self.attrs) != len(self.dtypes):
             return False
 
         for attr, dtype in zip(self.attrs, self.dtypes):
             if attr.value != dtype.value:
-                print(f'\n\n{attr.__class__}\n{dtype.__class__}\n\n')
+                #print(f'\n\n{attr.__class__}\n{dtype.__class__}\n\n')
                 return False
         
         if self.predicate:
-            print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
+            #print(f'CHECK PREDICATE: {self.predicate} = {self.predicate.eval()}')
             predicate = self.predicate.eval()
 
         for attr in self.attrs:
@@ -104,12 +103,12 @@ class Subcriptable(type):
         i = 0
         dtypes = []
         predicate = None
-        print('SUBCRIPTABLE')  
+        #print('SUBCRIPTABLE')  
 
         while i < len(item):
             if isinstance(item[i], BitOr):
-                print('@@@@@@@@@@@@@@ BITOR @@@@@@@@@@@@@@@@')
-                print(item[i].left, item[i].right)
+                #print('@@@@@@@@@@@@@@ BITOR @@@@@@@@@@@@@@@@')
+                #print(item[i].left, item[i].right)
                 dtypes.append(item[i].left)
                 predicate = item[i].right
             elif isinstance(item[i], (int,float)):
@@ -118,17 +117,17 @@ class Subcriptable(type):
                 dtypes.append(item[i])
             i += 1
 
-        print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}')
-        print(predicate)
-        print('\n\n')
+        #print(f'\n\n000000000000AAAAAAAAAAAAAAAAAAAAAAAAAA \n{dtypes} \n{predicate}')
+        #print(predicate)
+        #print('\n\n')
         
         _dict = { k: v for k, v in cls.__dict__.items() }
         _dict['dtypes'] = dtypes
         _dict['predicate'] = predicate
 
         newcls = DependentType.__new__(self, self.__name__, (), _dict)
-        # print(self,cls,item)
-        print(newcls.__dict__)
+        # #print(self,cls,item)
+        #print(newcls.__dict__)
         return newcls
 
     def __getitem__(cls, item):

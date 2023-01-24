@@ -1,5 +1,5 @@
 from .metaclasses import DependentType, GetAttr
-from ast_nodes import *
+from dtypes.ast import *
 
 __all__ = [
     "DependentType", "GetAttr", "Constant", "AST", 

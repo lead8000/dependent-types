@@ -8,8 +8,8 @@ from ranges import Range, RangeSet
 def visualizer(func):
 
     def decorator(_, node, ctx = {}):        
-        #print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
-        #print(f'{ast.dump(node)}')
+        ##print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
+        ##print(f'{ast.dump(node)}')
         func(_, node, ctx)
     
     return decorator
@@ -72,10 +72,10 @@ class Visitor(GenericVisitor):
             for arg in node.args.args:
                 dtype = childCtx[f'{arg.annotation.slice.id}']
                 childCtx[arg.arg] = deepcopy(dtype) 
-            #print(ast.dump(node))
-            #print(ctx)    
+            ##print(ast.dump(node))
+            ##print(ctx)    
 
-        #print()
+        ##print()
 
         return self.generic_visit(node, childCtx)
 
@@ -84,9 +84,9 @@ class Visitor(GenericVisitor):
         for _node in node.body:
             if isinstance(_node, ast.Assign):
                 ctx['numberOfTimes'] = ctx[node.iter.id]
-            #print(f'{ctx[node.iter.id]} veces --- ', ast.dump(_node))
-            #print(_node.targets)
-        #print()
+            ##print(f'{ctx[node.iter.id]} veces --- ', ast.dump(_node))
+            ##print(_node.targets)
+        ##print()
         return self.generic_visit(node, ctx)
 
     @visualizer
@@ -107,9 +107,9 @@ class Visitor(GenericVisitor):
                         numberOfTimes = ctx[numberOfTimes] 
                     # ctx.__delattr__('numberOfTimes')
                 ctx[varAssign] = ctx[varAssign] + numberOfTimes
-                #print(ctx)
+                ##print(ctx)
 
-        #print()
+        ##print()
         return self.generic_visit(node, ctx)
 
     @visualizer
@@ -130,7 +130,7 @@ class CheckTypeComposition(GenericVisitor):
     def visit_Compare(self, dtype: ast.Compare, ctx={}):
 
         if isinstance(dtype.left, ast.Attribute):
-            #print(ast.dump(dtype))
+            ##print(ast.dump(dtype))
             if isinstance(dtype.comparators[0], ast.Constant):
                 
                 if dtype.left.attr not in ctx[dtype.left.value.id]:

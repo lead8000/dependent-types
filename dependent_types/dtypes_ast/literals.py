@@ -1,5 +1,5 @@
-from .base import AST, visualizer
-from .operators import BitOr, Add, Sub, Mul, TrueDiv, FloorDiv, Eq, Ne, Lt, Le, Gt, Ge, Mod, Pow
+from dtypes.ast import AST, visualizer
+from dtypes.ast import BitOr, Add, Sub, Mul, TrueDiv, FloorDiv, Eq, Ne, Lt, Le, Gt, Ge, Mod, Pow
 
 class Constant(AST):
     """

@@ -8,7 +8,7 @@ def intersection(
     return [x for x in a if x in b]
 
 a: int = 6
-#print(intersection.__annotations__)
+##print(intersection.__annotations__)
 
 dsl = """
 axioms = {
@@ -34,4 +34,4 @@ b = List[float | (lambda y: y < 50)]
 
 # import ast
 
-# #print(ast.dump(ast.parse(dsl)))
+# ##print(ast.dump(ast.parse(dsl)))
