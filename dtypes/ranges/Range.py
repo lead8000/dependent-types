@@ -1,7 +1,7 @@
 from contextlib import suppress
 import re
 from ._helper import _InfiniteValue, Inf, Rangelike, RangelikeString
-import ranges  # avoid circular imports by explicitly referring to ranges.RangeSet when needed
+import dtypes.ranges as ranges  # avoid circular imports by explicitly referring to ranges.RangeSet when needed
 from typing import Any, TypeVar, Union
 
 

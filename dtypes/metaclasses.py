@@ -1,7 +1,7 @@
 import re
 from dtypes.ast import AST, Attr, BitOr, Constant
 from dtypes.visitor import CheckTypeComposition
-from ranges import Range, RangeSet
+from dtypes.ranges import Range, RangeSet, RangeDict
 
 def GetAttr(cls, attr):
     attribute = None
@@ -113,22 +113,16 @@ class Checkable(type):
         elif len(rng_b) == 0:
             return False
 
-        rng_a = {
-            var: RangeSet(rng) if isinstance(rng, Range) else rng 
-            for var, rng in rng_a.items()            
-        }
-        rng_b = {
-            var: RangeSet(rng) if isinstance(rng, Range) else rng 
-            for var, rng in rng_b.items()            
-        }
+        rng_a = RangeDict(rng_a)
+        rng_b = RangeDict(rng_b)
 
         print(rng_a, rng_b)
 
-        u = rng_a['var_0'] | rng_b['var_0']
+        u = rng_a | rng_b
 
         print(rng_a, rng_b, u)
 
-        return rng_b['var_0'] == u
+        return rng_b == u
 
 class Subcriptable(type):
 

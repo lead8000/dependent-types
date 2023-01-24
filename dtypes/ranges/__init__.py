@@ -13,4 +13,4 @@ from .RangeDict import RangeDict
 from ._helper import Inf, Rangelike, RangelikeString
 
 __all__ = ["Range", "RangeSet", "RangeDict", "Inf", "Rangelike", "RangelikeString"]
-name = "ranges"
+name = "dtypes.ranges"

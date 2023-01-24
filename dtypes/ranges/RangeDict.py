@@ -16,8 +16,10 @@ class RangeDict:
         return self.dict[var]
 
     def __setitem__(self, var, rng):
+        
         if isinstance(rng, Range):
             self.dict[var] = RangeSet(rng)
+
         elif isinstance(rng, RangeSet):
             self.dict[var] = rng
 
@@ -34,3 +36,20 @@ class RangeDict:
                 rng_dict[var] = rng
         
         return rng_dict
+
+    def __eq__(self, other) -> bool:
+        
+        try:
+            for var, rng in self.dict.items():    
+                if other[var] != rng:
+                    return False
+            return True
+        
+        except KeyError:
+            return False
+
+    def __str__(self) -> str:
+        __str = ""
+        for var, rng in self.dict.items():
+            __str += f'{var}: {rng}'
+        return "RangeDict{" + __str + "}"

@@ -1,7 +1,7 @@
 from numbers import Number
 from operator import eq  # , is_
 from typing import Any, Iterable, Union, TypeVar
-import ranges
+import dtypes.ranges as ranges
 
 r"""
 Type hint for the specific type of string that can be parsed as a range.

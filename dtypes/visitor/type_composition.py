@@ -1,5 +1,5 @@
 from .generic import GenericVisitor, visualizer
-from ranges import Range, RangeSet
+from dtypes.ranges import Range, RangeSet
 from copy import deepcopy
 from dtypes.ast import Attr, Constant
 from sys import maxsize as oo

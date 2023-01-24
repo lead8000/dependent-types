@@ -1,5 +1,5 @@
 from ast import parse
-from ranges import Range, RangeSet
+# from ranges import Range, RangeSet
 from dtypes._visitor import CheckTypeComposition
 
 def composes(dt_a, dt_b):
@@ -23,10 +23,10 @@ def composes(dt_a, dt_b):
     elif rng_b is None:
         return False
     
-    if isinstance(rng_a, Range):
-        rng_a = RangeSet(rng_a)
-    if isinstance(rng_b, Range):
-        rng_b = RangeSet(rng_b)
+    # if isinstance(rng_a, Range):
+    #     rng_a = RangeSet(rng_a)
+    # if isinstance(rng_b, Range):
+    #     rng_b = RangeSet(rng_b)
 
     u = rng_a | rng_b
 
