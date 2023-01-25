@@ -1,7 +1,6 @@
-import re
 from dtypes.ast import AST, Attr, BitOr, Constant
 from dtypes.visitor import CheckTypeComposition
-from dtypes.ranges import Range, RangeSet, RangeDict
+from dtypes.ranges import RangeDict
 
 def GetAttr(cls, attr):
     attribute = None
@@ -12,55 +11,6 @@ def GetAttr(cls, attr):
     if attribute is None:
         attribute = Attr(attr)
     return attribute
-
-def axiom(func):
-    func.__is_axiom__ = True
-    return func
-
-class LengthVar(type):
-
-    def __new__(cls, name):
-        return super().__new__(cls, name, (), {})
-
-    def __add__(self, other):
-
-        if isinstance(other, int):
-            other = LengthVar(str(other))
-
-        x = self.__name__.split('+') + other.__name__.split('+')		
-
-        sum = 0
-        vars = []
-
-        for i in x:
-            if re.match(r'[0-9]+', i):
-                sum += int(i)
-            else:
-                vars.append(i)
-
-        if len(vars) == 0:
-            return LengthVar(str(sum))
-
-        vars = sorted(vars)
-        vars = '+'.join(vars)
-
-        if sum != 0:
-            vars += '+' + str(sum)
-
-        return LengthVar(vars)
-
-    def __eq__(self, other):
-        return self.__name__ == other.__name__
-
-class Predicate(type):
-
-    def __new__(cls, predicate):
-        return super().__new__(cls, "Predicate", (), { 
-            '__call__': predicate
-        })
-
-    def __call__(self, *args, **kwds):
-        return self.__call__(*args, **kwds)
 
 class Checkable(type):
 

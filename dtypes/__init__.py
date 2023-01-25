@@ -1,4 +1,4 @@
-from .metaclasses import DependentType, GetAttr
+from .dependent_type import DependentType, GetAttr
 from dtypes.ast import *
 from dtypes.visitor import GenericVisitor
 
