@@ -4,7 +4,7 @@ from copy import deepcopy
 from dtypes.ast import Attr, Constant, Eq, Ne, Lt, Gt, Le, Ge
 from sys import maxsize as oo
 
-class CheckTypeComposition(GenericVisitor):
+class TypeInference(GenericVisitor):
 
     @visualizer(False)
     def visit(self, dtype, ctx={}):

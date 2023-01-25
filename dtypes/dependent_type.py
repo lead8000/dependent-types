@@ -1,5 +1,5 @@
 from dtypes.ast import AST, Attr, BitOr, Constant
-from dtypes.visitor import CheckTypeComposition
+from dtypes.visitor import TypeInference
 from dtypes.ranges import RangeDict
 
 def GetAttr(cls, attr):
@@ -55,11 +55,11 @@ class Checkable(type):
 
         dt_a = __subclass.predicate
         ctx_a = { 'vars': {}, 'ranges': {} }
-        ctx_result_a = CheckTypeComposition().visit(dt_a, ctx_a)
+        ctx_result_a = TypeInference().visit(dt_a, ctx_a)
 
         dt_b = self.predicate
         ctx_b = { 'vars': { k:v for k,v in ctx_result_a['vars'].items() }, 'ranges': {} }
-        ctx_result_b = CheckTypeComposition().visit(dt_b, ctx_b)
+        ctx_result_b = TypeInference().visit(dt_b, ctx_b)
 
         rng_a = ctx_result_a['ranges']
         rng_b = ctx_result_b['ranges']

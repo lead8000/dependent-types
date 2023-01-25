@@ -1,5 +1,5 @@
 from .generic import GenericVisitor, visualizer
-from .type_composition import CheckTypeComposition
+from .type_inference import TypeInference
 
-__all__ = ["GenericVisitor", "visualizer", "CheckTypeComposition"]
+__all__ = ["GenericVisitor", "visualizer", "TypeInference"]
 name = "dtypes.visitor"
