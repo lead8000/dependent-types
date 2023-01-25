@@ -7,6 +7,8 @@ class RangeDict:
         RangeDict handles relationships between dictionaries with stored Ranges.
     """
     def __init__(self, __dict):
+        if isinstance(__dict, RangeDict):
+            raise Exception()
         self.dict = {
             var: RangeSet(rng) if isinstance(rng, Range) else rng   
             for var, rng in __dict.items()
@@ -48,8 +50,16 @@ class RangeDict:
         except KeyError:
             return False
 
-    def __str__(self) -> str:
+    def __repr__(self) -> str:
         __str = ""
+        first = True
         for var, rng in self.dict.items():
-            __str += f'{var}: {rng}'
-        return "RangeDict{" + __str + "}"
+            if first:
+                __str += f'{var}: {rng}'
+                first = False
+            else:
+                __str += f', {var}: {rng}'
+        return "RangeDict{ " + __str + " }"
+
+    def __len__(self) -> int:
+        return len(self.dict)

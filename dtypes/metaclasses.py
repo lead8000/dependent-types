@@ -113,8 +113,10 @@ class Checkable(type):
         elif len(rng_b) == 0:
             return False
 
-        rng_a = RangeDict(rng_a)
-        rng_b = RangeDict(rng_b)
+        if not isinstance(rng_a, RangeDict):
+            rng_a = RangeDict(rng_a)
+        if not isinstance(rng_b, RangeDict):
+            rng_b = RangeDict(rng_b)
 
         u = rng_a | rng_b
 

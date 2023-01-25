@@ -1,7 +1,7 @@
 from .generic import GenericVisitor, visualizer
-from dtypes.ranges import Range, RangeSet
+from dtypes.ranges import Range, RangeSet, RangeDict
 from copy import deepcopy
-from dtypes.ast import Attr, Constant
+from dtypes.ast import Attr, Constant, Eq, Ne, Lt, Gt, Le, Ge
 from sys import maxsize as oo
 
 class CheckTypeComposition(GenericVisitor):
@@ -86,12 +86,31 @@ class CheckTypeComposition(GenericVisitor):
             var = ctx_copy['vars'][dtype.left.attr]
             ctx_copy['ranges'][var] = RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
 
+            return ctx_copy    
+
+    def visit_Or(self, dtype, ctx = {}):
+        
+        if isinstance(dtype.left, (Attr, Eq, Ne, Lt, Gt, Le, Ge)) \
+        and isinstance(dtype.right, (Attr, Eq, Ne, Lt, Gt, Le, Ge)):
+            ctx_copy  = deepcopy(ctx)
+            
+            ctx_left  = self.visit(dtype.left, ctx_copy)            
+            for attr,var in ctx_left['vars'].items():
+                ctx_copy['vars'][attr] = var
+            
+            ctx_right = self.visit(dtype.right, ctx_copy)
+            for attr,var in ctx_right['vars'].items():
+                ctx_copy['vars'][attr] = var
+            
+            ctx_left['ranges']  = RangeDict(ctx_left['ranges'])
+            ctx_right['ranges'] = RangeDict(ctx_right['ranges'])
+
+            ctx_copy['ranges'] = ctx_left['ranges'] | ctx_right['ranges']
+
+            print(f'\n\n{ ctx_copy }\n\n')
+
             return ctx_copy
 
-    
-
-    # def visit_Or(self, dtype, ctx = {}):
-    #     ...
 
     # def visit_Attr(self, dtype, ctx = {}):
     #     ...
