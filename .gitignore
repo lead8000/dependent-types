@@ -1,8 +1,10 @@
+tmp.py
+state_art
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-state_art
 
 # C extensions
 *.so
