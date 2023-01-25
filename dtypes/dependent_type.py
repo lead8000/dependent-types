@@ -53,13 +53,11 @@ class Checkable(type):
         if not issubclass(self.base_type, __subclass.base_type):
             return False
 
-        dt_a = __subclass.predicate
         ctx_a = { 'vars': {}, 'ranges': {} }
-        ctx_result_a = TypeInference().visit(dt_a, ctx_a)
+        ctx_result_a = TypeInference().get(__subclass, ctx_a)
 
-        dt_b = self.predicate
         ctx_b = { 'vars': { k:v for k,v in ctx_result_a['vars'].items() }, 'ranges': {} }
-        ctx_result_b = TypeInference().visit(dt_b, ctx_b)
+        ctx_result_b = TypeInference().get(self, ctx_b)
 
         rng_a = ctx_result_a['ranges']
         rng_b = ctx_result_b['ranges']

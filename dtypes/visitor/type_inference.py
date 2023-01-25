@@ -6,6 +6,12 @@ from sys import maxsize as oo
 
 class TypeInference(GenericVisitor):
 
+    def get(self, dtype, ctx = {}):
+
+        print(f'{dtype.__dict__}')
+
+        return self.visit(dtype.predicate, ctx)
+
     @visualizer(False)
     def visit(self, dtype, ctx={}):
         return super().visit(dtype, ctx)
