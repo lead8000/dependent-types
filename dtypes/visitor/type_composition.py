@@ -6,15 +6,15 @@ from sys import maxsize as oo
 
 class CheckTypeComposition(GenericVisitor):
 
-    @visualizer()
+    @visualizer(False)
     def visit(self, dtype, ctx={}):
         return super().visit(dtype, ctx)
 
     def visit_Gt(self, dtype, ctx = {}):
 
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
-            print(dtype.left, dtype.right)
             ctx_copy = deepcopy(ctx)
+
             if dtype.left.attr not in ctx_copy['vars']:
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
@@ -26,8 +26,8 @@ class CheckTypeComposition(GenericVisitor):
     def visit_Lt(self, dtype, ctx = {}):
         
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
-            print(dtype.left, dtype.right)
             ctx_copy = deepcopy(ctx)
+            
             if dtype.left.attr not in ctx_copy['vars']:
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
@@ -39,8 +39,8 @@ class CheckTypeComposition(GenericVisitor):
     def visit_Ge(self, dtype, ctx = {}):
 
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
-
             ctx_copy = deepcopy(ctx)
+
             if dtype.left.attr not in ctx_copy['vars']:
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
@@ -52,8 +52,8 @@ class CheckTypeComposition(GenericVisitor):
     def visit_Le(self, dtype, ctx = {}):
         
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
-
             ctx_copy = deepcopy(ctx)
+
             if dtype.left.attr not in ctx_copy['vars']:
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
@@ -65,8 +65,8 @@ class CheckTypeComposition(GenericVisitor):
     def visit_Eq(self, dtype, ctx = {}):
         
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
-
             ctx_copy = deepcopy(ctx)
+
             if dtype.left.attr not in ctx_copy['vars']:
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 

@@ -1,3 +1,4 @@
+from dtypes import DependentType
 from matrix import Matrix
 from dtypes import GetAttr
 from dtypes.visitor import CheckTypeComposition
@@ -24,7 +25,6 @@ else:
 # ctx = { 'vars': {}, 'ranges': {} }
 # ctx_result = CheckTypeComposition().visit(expr, ctx)
 # print(f'\nFINAL CONTEXT: {ctx_result}')
-
 
 # expr2 = N > 100
 # ctx2 = { 'vars': {}, 'ranges': {} }

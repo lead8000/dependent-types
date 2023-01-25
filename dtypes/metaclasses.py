@@ -97,6 +97,16 @@ class Checkable(type):
 
     def __subclasscheck__(self, __subclass) -> bool:
 
+        if self.__name__ != "DependentType" and \
+        __subclass.__name__ != "DependentType":
+            for cls in self.mro():
+                if cls == __subclass:
+                    return True
+            return False
+
+        if not issubclass(self.base_type, __subclass.base_type):
+            return False
+
         dt_a = __subclass.predicate
         ctx_a = { 'vars': {}, 'ranges': {} }
         ctx_result_a = CheckTypeComposition().visit(dt_a, ctx_a)
@@ -128,7 +138,9 @@ class Subcriptable(type):
         i = 0
         dtypes = []
         predicate = None
-        #print('SUBCRIPTABLE')  
+        print('SUBCRIPTABLE')  
+
+        print(self, cls, item)
 
         if isinstance(item, BitOr):
             dtypes.append(item.left)
@@ -152,6 +164,7 @@ class Subcriptable(type):
             
         _dict = { k: v for k, v in cls.__dict__.items() }
         _dict['dtypes'] = dtypes
+        _dict['base_type'] = cls
         _dict['predicate'] = predicate
 
         newcls = DependentType.__new__(self, self.__name__, (), _dict)
