@@ -98,14 +98,17 @@ class Subcriptable(type):
                 elif isinstance(item[i], AST): 
                     dtypes.append(item[i])
                 i += 1
-            
+
         _dict = { k: v for k, v in cls.__dict__.items() }
         _dict['dtypes'] = dtypes
         _dict['base_type'] = cls
         _dict['predicate'] = predicate
 
         newcls = DependentType.__new__(self, self.__name__, (), _dict)
-        
+
+        print(newcls.attrs)
+        print(newcls.base_type.attrs)
+
         return newcls
 
     def __getitem__(cls, item):

@@ -1,6 +1,6 @@
 from dtypes import DependentType
 from matrix import Matrix
-from dtypes import GetAttr
+from dtypes import GetAttr, _
 from dtypes.visitor import CheckTypeComposition
 
 m = Matrix([[23,3,5,43],[95,5],[93,12],[55,53]])
@@ -8,7 +8,7 @@ m = Matrix([[23,3,5,43],[95,5],[93,12],[55,53]])
 N = GetAttr(Matrix, 'amount_rows')
 M = GetAttr(Matrix, 'amount_cols')
 
-if isinstance(m, Matrix[ N, 4 | ( (N > 2 * M) & (N <= M + 1) | (M != 4) ) ]):
+if isinstance(m, Matrix[ M, _ | ( (N > 2 * M) & (N <= M + 1) | (M != 4) ) ]):
     print('YEESSSS')
 else:
     print('NOOOOOO')
