@@ -39,6 +39,20 @@ class RangeDict:
         
         return rng_dict
 
+    def __and__(self, other):
+        rng_dict = RangeDict({})
+
+        for var, rng in self.dict.items():
+            rng_dict[var] = rng
+
+        for var, rng in other.dict.items():
+            if var in rng_dict.dict:
+                rng_dict[var] &= rng
+            else:
+                rng_dict[var] = rng
+        
+        return rng_dict
+
     def __eq__(self, other) -> bool:
         
         try:

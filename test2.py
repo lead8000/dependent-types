@@ -15,7 +15,7 @@ class A:...
 class B(A):...
 assert issubclass(B, A)
 
-if issubclass(Matrix[ N | ( (N > 100) | ( N < 50) ) ], Matrix[ N | ( N != 50 ) ]):
+if issubclass(Matrix[ N | ( (N < 100) & ( N > 50) ) ], Matrix[ N | ( N > 50 ) ]):
     print('YEESSSS')
 else:
     print('NOOOOOO')
