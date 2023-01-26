@@ -7,7 +7,7 @@ from copy import deepcopy
 class Checkable(type):
 
     def __instancecheck__(self, __instance) -> bool:
-        
+        print(self._attrs)
         for attr in self._attrs:
             if not self._attrs[attr].__contains__(__instance.__getattribute__(attr)):
                 return False
@@ -77,9 +77,10 @@ class Subcriptable(type):
         vars   = { attr: f'var_{i}' for i, attr in enumerate(dtype._attrs) } 
         ranges = { vars[attr]: rng  for attr, rng in dtype._attrs.items() }
         ctx    = { 'vars': vars, 'ranges': ranges }
-
+        # print(ctx)
         ctx_result = TypeInference().get(dtype, ctx)
-        
+        # print(ctx_result)
+        # return dtype
         for attr,var in ctx_result['vars'].items():
             dtype._attrs[attr] = ctx_result['ranges'][var]
 

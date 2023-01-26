@@ -1,5 +1,6 @@
 from .Range import Range
 from .RangeSet import RangeSet
+from copy import deepcopy
 
 
 class RangeDict:
@@ -8,11 +9,12 @@ class RangeDict:
     """
     def __init__(self, __dict):
         if isinstance(__dict, RangeDict):
-            raise Exception()
-        self.dict = {
-            var: RangeSet(rng) if isinstance(rng, Range) else rng   
-            for var, rng in __dict.items()
-        }
+            self.dict = deepcopy(__dict.dict)
+        else:
+            self.dict = {
+                var: RangeSet(rng) if isinstance(rng, Range) else rng   
+                for var, rng in __dict.items()
+            }
 
     def __getitem__(self, var):
         return self.dict[var]

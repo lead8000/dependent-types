@@ -1,3 +1,4 @@
+from dtypes import DependentType
 from matrix import Matrix
 from dtypes import Attr, _
 
@@ -26,4 +27,8 @@ def test_5():
 
 def test_6(): 
     assert issubclass(Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N < 100) & ( M < 51))  )], \
-                          Matrix[N, M | (N < 100)])
+                          Matrix[ N, M])
+
+def test_7(): 
+    assert issubclass(Matrix[ N, M], \
+                    Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N < 100) & ( M < 51))  )])

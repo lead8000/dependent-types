@@ -10,3 +10,6 @@ m = Matrix(
      [84,23,54,23],
      [29,49,23,53]]
 )
+
+def test_1():
+    assert isinstance(m, Matrix[ _, M | ( M < 50 ) ])

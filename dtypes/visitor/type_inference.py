@@ -1,7 +1,7 @@
 from .generic import GenericVisitor, visualizer
 from dtypes.ranges import Range, RangeSet, RangeDict
 from copy import deepcopy
-from dtypes.ast import Attr, Constant, Eq, Ne, Lt, Gt, Le, Ge
+from dtypes.ast import Attr, Constant, Eq, Ne, Lt, Gt, Le, Ge, Or, And
 from sys import maxsize as oo
 
 class TypeInference(GenericVisitor):
@@ -93,24 +93,20 @@ class TypeInference(GenericVisitor):
 
     def visit_Or(self, dtype, ctx = {}):
         
-        if isinstance(dtype.left, (Attr, Eq, Ne, Lt, Gt, Le, Ge)) \
-        and isinstance(dtype.right, (Attr, Eq, Ne, Lt, Gt, Le, Ge)):
+        if isinstance(dtype.left, (Attr, Eq, Ne, Lt, Gt, Le, Ge, Or, And)) \
+        and isinstance(dtype.right, (Attr, Eq, Ne, Lt, Gt, Le, Ge, Or, And)):
             ctx_copy  = deepcopy(ctx)
             
-            ctx_left  = self.visit(dtype.left, ctx_copy)            
-            for attr,var in ctx_left['vars'].items():
-                ctx_copy['vars'][attr] = var
-            
+            ctx_left = self.visit(dtype.left, ctx_copy)
             ctx_right = self.visit(dtype.right, ctx_copy)
-            for attr,var in ctx_right['vars'].items():
-                ctx_copy['vars'][attr] = var
+            # print(f'\n\n1 { ctx_left }\n  { ctx_right }\n\n')
             
             ctx_left['ranges']  = RangeDict(ctx_left['ranges'])
+            # print(f'bye! {ctx_right["ranges"]}')
             ctx_right['ranges'] = RangeDict(ctx_right['ranges'])
-
             ctx_copy['ranges'] = ctx_left['ranges'] | ctx_right['ranges']
 
-            ##print(f'\n\n{ ctx_copy }\n\n')
+            # print(f'\n\n2 { ctx_copy }\n\n')
 
             return ctx_copy
 
@@ -120,13 +116,8 @@ class TypeInference(GenericVisitor):
         and isinstance(dtype.right, (Attr, Eq, Ne, Lt, Gt, Le, Ge)):
             ctx_copy  = deepcopy(ctx)
             
-            ctx_left  = self.visit(dtype.left, ctx_copy)            
-            for attr,var in ctx_left['vars'].items():
-                ctx_copy['vars'][attr] = var
-            
+            ctx_left  = self.visit(dtype.left, ctx_copy)
             ctx_right = self.visit(dtype.right, ctx_copy)
-            for attr,var in ctx_right['vars'].items():
-                ctx_copy['vars'][attr] = var
             
             ctx_left['ranges']  = RangeDict(ctx_left['ranges'])
             ctx_right['ranges'] = RangeDict(ctx_right['ranges'])

@@ -12,4 +12,4 @@ m = Matrix(
 )
 
 def test_1():
-    assert isinstance(m, Matrix[ _, M | ( M < 50 ) ])
+    assert isinstance(m, Matrix[ _, M | ( M > 50 ) ])
