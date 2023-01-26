@@ -31,6 +31,6 @@ m = Matrix4x4(
 
 
 # assert isinstance(m, Matrix[N, M | ~(N > 1) & (M < 9)])
-A = Matrix[ N, M | (((N > 4) | ((N < 1) | (N > 2))) | ((N == 4) & (M == 3)))]
+# A = Matrix[ N, M | (((N > 4) | ((N < 1) | (N > 2))) | ((N == 4) & (M == 3)))]
 
-print(isinstance(m, A))
+# print(isinstance(m, A))

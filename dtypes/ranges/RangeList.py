@@ -9,8 +9,8 @@ class RangeList:
         RangeDict handles relationships between dictionaries with stored Ranges.
     """
     def __init__(self, __rng):
-        if isinstance(__rng, RangeList):
-            self.list = deepcopy(__rng.list)
+        if isinstance(__rng, list):
+            self.list = deepcopy(__rng)
         elif isinstance(__rng, RangeDict):
             self.list = [deepcopy(__rng)]
 
@@ -25,8 +25,15 @@ class RangeList:
     #     elif isinstance(rng, RangeSet):
     #         self.dict[var] = rng
 
+    def contains(self, attr, value):
+        for dict in self.list:
+            if dict[attr].__contains__(value):
+                return True
+        return False
+        
     def __or__(self, other):
         if isinstance(other, RangeList):
+            print(self.__dict__, other.__dict__)
             return RangeList(deepcopy(self.list) + deepcopy(other.list))
 
     def __and__(self, other):

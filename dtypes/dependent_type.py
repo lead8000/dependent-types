@@ -8,12 +8,15 @@ import dtypes
 class Checkable(type):
 
     def __instancecheck__(self, instance) -> bool:
-        # print(eval(f'__instance.{attr}'))
-        for attr in self._attrs:
-            if not self._attrs[attr].__contains__(eval(f'instance.{attr}')):
-                return False
+        # #print(eval(f'__instance.{attr}'))
+        for dict in self._ranges.list:
+            for attr in self._attrs:
+                if not dict.__contains__(attr, eval(f'instance.{attr}')):
+                    break
+            else:
+                return True
 
-        return True
+        return False
 
     def __subclasscheck__(self, __subclass) -> bool:
 
@@ -24,25 +27,33 @@ class Checkable(type):
                     return True
             return False
 
+
         if not issubclass(self.base_type, __subclass.base_type):
             return False
 
-        rng_a = self._attrs
-        rng_b = __subclass._attrs
+        rng_a = self._ranges
+        rng_b = __subclass._ranges
 
-        if len(rng_a) == 0:
-            return True
-        elif len(rng_b) == 0:
-            return False
+        # if len(rng_a) == 0:
+        #     return True
+        # elif len(rng_b) == 0:
+        #     return False
 
-        if not isinstance(rng_a, RangeDict):
-            rng_a = RangeDict(rng_a)
-        if not isinstance(rng_b, RangeDict):
-            rng_b = RangeDict(rng_b)
+        # if not isinstance(rng_a, RangeDict):
+        #     rng_a = RangeDict(rng_a)
+        # if not isinstance(rng_b, RangeDict):
+        #     rng_b = RangeDict(rng_b)
+        
+        for dict_a in rng_a.list:
+            for dict_b in rng_b.list:
+                u = dict_a | dict_b
+                print(f'!!! {dict_a} U {dict_b} =  {u}\n')
+                if dict_b == u:
+                    break
+            else:
+                return False                    
 
-        u = rng_a | rng_b
-
-        return rng_b == u
+        return True
 
 class Subcriptable(type):
 
@@ -70,8 +81,8 @@ class Subcriptable(type):
             if name not in ('__module__', '__weakref__', '__dict__') }
         _dict['base_type'] = cls
         _dict['contraint'] = contraint
-
         for attr1, attr2 in zip(dtypes, cls._attrs.keys()):
+            _dict['_attrs'][attr2] = RangeSet(Range(f"({-oo},{oo})"))
             if isinstance(attr1, Constant):
                 _dict['_attrs'][attr2] = RangeSet(Range(f"[{attr1.value},{attr1.value}]"))
             else:
@@ -82,18 +93,18 @@ class Subcriptable(type):
 
         vars   = { attr: f'var_{i}' for i, attr in enumerate(dtype._attrs) } 
         ranges = deepcopy(dtype._ranges)
-        ctx    = { 'vars': vars, 'ranges': ranges }
+        ctx    = { 'vars': vars, 'ranges': ranges, '_model_dict': deepcopy(RangeDict(_dict['_attrs'])) }
 
         if contraint:
-            print(f'\n{ctx}')
+            #print(f'\n{ctx}')
             ctx_result = TypeInference().get(dtype, ctx)
 
-            print(f'{ctx_result}\n')
-            for attr,var in ctx_result['vars'].items():
-                if ctx_result['ranges'][var]:
-                    dtype._attrs[attr] = ctx_result['ranges'][var]
-                else:
-                    raise Exception("The dependent type expresses an inconsistent state.")
+            print(f'\n\n\n{ctx_result["ranges"].list}\n')
+            # for attr,var in ctx_result['vars'].items():
+            if ctx_result['ranges']:
+                dtype._ranges = ctx_result['ranges']
+            else:
+                raise Exception("The dependent type expresses an inconsistent state.")
         return dtype
 
     def __getitem__(cls, item):

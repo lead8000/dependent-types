@@ -57,7 +57,7 @@ class And(BinOp):
     #     return And(self, other)
     # @visualizer
     def __ror__(self, other):
-        # print(self, other)
+        # #print(self, other)
         return Or(self, other)
 
 class Or(BinOp):

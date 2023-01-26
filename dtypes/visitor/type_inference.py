@@ -19,9 +19,9 @@ class TypeInference(GenericVisitor):
             ctx_copy = deepcopy(ctx)
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'] &= RangeList(RangeDict({
-                var: Range(dtype.right.value, oo, include_start=False)
-            }))
+            newDict = deepcopy(ctx['_model_dict'])
+            newDict[dtype.left.attr] =Range(dtype.right.value, oo, include_start=False)
+            ctx_copy['ranges'] &= RangeList(newDict)
             
             return ctx_copy
 
@@ -31,9 +31,9 @@ class TypeInference(GenericVisitor):
             ctx_copy = deepcopy(ctx)
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'] &= RangeList(RangeDict({
-                var: Range(-oo, dtype.right.value, include_start=False)
-            }))
+            newDict = deepcopy(ctx['_model_dict'])
+            newDict[dtype.left.attr] = Range(-oo, dtype.right.value, include_start=False)
+            ctx_copy['ranges'] &= RangeList(newDict)
             
             return ctx_copy
 
@@ -42,13 +42,10 @@ class TypeInference(GenericVisitor):
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
             ctx_copy = deepcopy(ctx)
 
-            if dtype.left.attr not in ctx_copy['vars']:
-                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
-
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'] &= RangeList(RangeDict({
-                var: Range(dtype.right.value, oo)
-            }))
+            newDict = deepcopy(ctx['_model_dict'])
+            newDict[var] = Range(dtype.right.value, oo)
+            ctx_copy['ranges'] |= RangeList(newDict)
 
             return ctx_copy
 
@@ -61,9 +58,9 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'] &= RangeList(RangeDict({
-                var: Range(-oo, dtype.right.value, include_end=True)
-            }))
+            newDict = deepcopy(ctx['_model_dict'])
+            newDict[dtype.left.attr] = Range(-oo, dtype.right.value, include_end=True)
+            ctx_copy['ranges'] |= RangeList(newDict)
             
             return ctx_copy
 
@@ -76,9 +73,9 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'] &= RangeList(RangeDict({
-                var: Range(dtype.right.value, dtype.right.value, include_end=True)
-            }))
+            newDict = deepcopy(ctx['_model_dict'])
+            newDict[dtype.left.attr] = Range(dtype.right.value, dtype.right.value, include_end=True)
+            ctx_copy['ranges'] |= RangeList(newDict)
             
             return ctx_copy
 
@@ -91,10 +88,9 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'] &= RangeList(RangeDict({
-                var: RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
-            }))
+            newDict = deepcopy(ctx['_model_dict'])
+            newDict[dtype.left.attr] = RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
+            ctx_copy['ranges'] |= RangeList(newDict)
 
             return ctx_copy    
 
@@ -106,13 +102,13 @@ class TypeInference(GenericVisitor):
             
             ctx_left = self.visit(dtype.left, ctx_copy)
             ctx_right = self.visit(dtype.right, ctx_copy)
-            # print(f'\n\n1 { ctx_left }\n  { ctx_right }\n\n')
+            # #print(f'\n\n1 { ctx_left }\n  { ctx_right }\n\n')
             
             # ctx_left['ranges']  = RangeList(RangeDict(ctx_left['ranges']))
             # ctx_right['ranges'] = RangeList(RangeDict(ctx_right['ranges']))
             ctx_copy['ranges']  = (ctx_left['ranges'] | ctx_right['ranges'])
 
-            # print(f'\n\n2 { ctx_copy }\n\n')
+            # #print(f'\n\n2 { ctx_copy }\n\n')
 
             return ctx_copy
 

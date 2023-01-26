@@ -44,7 +44,7 @@ class Constant(AST):
         return self.value < other.value
     @visualizer
     def __gt__(self, other: 'Constant') -> bool:
-        ###print(self, other)
+        ####print(self, other)
         return self.value > other.value
     @visualizer
     def __le__(self, other: 'Constant') -> bool:
@@ -83,7 +83,7 @@ class Attr(AST):
     def __ne__(self, other: 'Attr') -> AST:
         if isinstance(other, (int, float)):
             other = Num(other)
-        ###print('YYYYYYYYEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSS')
+        ####print('YYYYYYYYEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSS')
         return Ne(self, other)
     
     def __lt__(self, other: 'Attr') -> AST:

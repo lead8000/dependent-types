@@ -14,7 +14,7 @@ def test_2():
     
 def test_3(): 
     assert issubclass(Matrix[ N, M | ( ((N < 80)  & ( M > 60)) | ( (N > 101) & ( M <49)) )] , \
-                          Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N > 100) & ( M <50))  )]  )
+                      Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N > 100) & ( M <50))  )]  )
 
 def test_4(): 
     assert not issubclass(Matrix[ N, M | ( ((N < 80)  & ( M > 60)) | ( (N > 99) & ( M <49)) )], \
@@ -32,9 +32,19 @@ def test_7():
     assert issubclass( Matrix[N, M | (N < 100)], \
                        Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N < 100) & ( M < 51))  )])
     
+
+
+A = Matrix[ N, M | ( ((N < 80)  & ( M > 60)) | ( (N > 101) & ( M <49)) )]
+B = Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N > 100) & ( M <50))  )]
+
+print('yeyyeyyeye')
+
+print(A._ranges.list)
+print()
+print(B._ranges.list)
 # test_1()
 # test_2()
-# # test_3()
+test_3()
 # test_4()
 # test_5()
 # test_6()

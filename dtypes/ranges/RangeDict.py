@@ -11,7 +11,7 @@ class RangeDict:
         if isinstance(__dict, RangeDict):
             self.dict = deepcopy(__dict.dict)
         else:
-            print(type(__dict))
+            #print(type(__dict))
             self.dict = {
                 var: RangeSet(rng) if isinstance(rng, Range) else rng   
                 for var, rng in __dict.items()
@@ -19,6 +19,9 @@ class RangeDict:
 
     def __getitem__(self, var):
         return self.dict[var]
+
+    def __contains__(self, attr, value):
+        return self.dict[attr].__contains__(value)
 
     def __setitem__(self, var, rng):
         
