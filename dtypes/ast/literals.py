@@ -61,10 +61,10 @@ class Attr(AST):
     """
         Attribute node.
     """
-    def __new__(self, attr):
+    def __new__(self, attr=None):
         return super().__new__(self, f"Attr_{attr}")
 
-    def __init__(self, attr):
+    def __init__(self, attr=None):
         self.attr = attr
 
     def eval(self):

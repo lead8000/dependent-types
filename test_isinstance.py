@@ -1,4 +1,3 @@
-from dtypes import DependentType
 from matrix import Matrix
 from dtypes import Attr, _
 
@@ -12,4 +11,5 @@ m = Matrix(
      [29,49,23,53]]
 )
 
-assert isinstance(m, Matrix[ _, M | ( M < 50 ) ])
+def test_1():
+    assert isinstance(m, Matrix[ _, M | ( M < 50 ) ])

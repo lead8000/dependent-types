@@ -1,45 +1,18 @@
 from dtypes.ast import AST, Attr, BitOr, Constant
 from dtypes.visitor import TypeInference
-from dtypes.ranges import RangeDict
-
-def GetAttr(cls, attr):
-    attribute = None
-    for _attr in cls.attrs:
-        if _attr.attr == attr:
-            attribute = _attr
-            break
-    if attribute is None:
-        attribute = Attr(attr)
-    return attribute
+from dtypes.ranges import Range, RangeDict
+from sys import maxsize as oo
+from copy import deepcopy
 
 class Checkable(type):
 
     def __instancecheck__(self, __instance) -> bool:
         
-        for attr in self.attrs:
-            attr.value = __instance.__getattribute__(attr.attr)
-
-        for dtype in self.dtypes:
-            if isinstance(dtype, Attr):
-                dtype.value = __instance.__getattribute__(dtype.attr)
-
-        if len(self.attrs) != len(self.dtypes):
-            return False
-
-        for attr, dtype in zip(self.attrs, self.dtypes):
-            if attr.value != dtype.value:
+        for attr in self._attrs:
+            if not self._attrs[attr].__contains__(__instance.__getattribute__(attr)):
                 return False
-        
-        if self.predicate:
-            predicate = self.predicate.eval()
 
-        for attr in self.attrs:
-            attr.value = None
-
-        for dtype in self.dtypes:
-            dtype.value = None
-        
-        return predicate if self.predicate else True
+        return True
 
     def __subclasscheck__(self, __subclass) -> bool:
 
@@ -53,14 +26,8 @@ class Checkable(type):
         if not issubclass(self.base_type, __subclass.base_type):
             return False
 
-        ctx_a = { 'vars': {}, 'ranges': {} }
-        ctx_result_a = TypeInference().get(__subclass, ctx_a)
-
-        ctx_b = { 'vars': { k:v for k,v in ctx_result_a['vars'].items() }, 'ranges': {} }
-        ctx_result_b = TypeInference().get(self, ctx_b)
-
-        rng_a = ctx_result_a['ranges']
-        rng_b = ctx_result_b['ranges']
+        rng_a = self._attrs
+        rng_b = __subclass._attrs
 
         if len(rng_a) == 0:
             return True
@@ -79,33 +46,44 @@ class Checkable(type):
 class Subcriptable(type):
 
     def __class_getitem__(self, cls, item) -> 'DependentType':
-        i = 0
         dtypes = []
-        predicate = None
-        print(item)
+        contraint = None
+        
         if isinstance(item, BitOr):
             dtypes.append(item.left)
-            predicate = item.right
+            contraint = item.right
         else:
-            while i < len(item):
-                if isinstance(item[i], BitOr):
-                    dtypes.append(item[i].left)
-                    predicate = item[i].right
-                elif isinstance(item[i], (int,float)):
-                    dtypes.append(Constant(item[i]))
-                elif isinstance(item[i], AST): 
-                    dtypes.append(item[i])
-                i += 1
-        # #print(item)
-        print(dtypes, predicate)
-        _dict = { k: v for k, v in cls.__dict__.items() }
-        _dict['dtypes'] = dtypes
+            for token in item:
+                if isinstance(token, BitOr):
+                    dtypes.append(token.left)
+                    contraint = token.right
+                elif isinstance(token, (int,float)):
+                    dtypes.append(Constant(token))
+                elif isinstance(token, AST): 
+                    dtypes.append(token)
+
+        if len(dtypes) != len(cls._attrs):
+            raise Exception("Missing or excess of dependent attributes.")
+
+        for attr1, attr2 in zip(dtypes, cls._attrs.keys()):
+            attr1.attr = attr2
+
+        _dict = { '_attrs': deepcopy(cls._attrs) }
         _dict['base_type'] = cls
-        _dict['predicate'] = predicate
+        _dict['contraint'] = contraint
 
-        newcls = DependentType.__new__(self, self.__name__, (), _dict)
+        dtype = DependentType.__new__(self, self.__name__, (), _dict)
 
-        return newcls
+        vars   = { attr: f'var_{i}' for i, attr in enumerate(dtype._attrs) } 
+        ranges = { vars[attr]: rng  for attr, rng in dtype._attrs.items() }
+        ctx    = { 'vars': vars, 'ranges': ranges }
+
+        ctx_result = TypeInference().get(dtype, ctx)
+        
+        for attr,var in ctx_result['vars'].items():
+            dtype._attrs[attr] = ctx_result['ranges'][var]
+
+        return dtype
 
     def __getitem__(cls, item):
         return cls.__class_getitem__(cls, item)
@@ -116,12 +94,12 @@ class DependentType(Checkable,Subcriptable):
         return super().__new__(self, name, *subclasses)
     
     def __init__(self, name, *subclasses, **dict) -> None:
-        self.attrs = []
+        self._attrs = {}
 
     def __ior__(self, attr):
-        self.attrs.append(Attr(attr))
+        self._attrs[attr] = Range(-oo, oo, include_start=False)
         return self
 
-    def __ilshift__(self, predicate):
-        self.predicate = predicate
+    def __ilshift__(self, contraint):
+        self.contraint = contraint
         return self
