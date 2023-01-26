@@ -1,17 +1,16 @@
 from dtypes.ast import AST, Attr, BitOr, Constant
 from dtypes.visitor import TypeInference
-from dtypes.ranges import Range, RangeDict
+from dtypes.ranges import Range, RangeDict, RangeList, RangeSet
 from sys import maxsize as oo
 from copy import deepcopy
 import dtypes
 
 class Checkable(type):
 
-    def __instancecheck__(self, __instance) -> bool:
-
+    def __instancecheck__(self, instance) -> bool:
+        # print(eval(f'__instance.{attr}'))
         for attr in self._attrs:
-
-            if not self._attrs[attr].__contains__(__instance._attrs[attr]):
+            if not self._attrs[attr].__contains__(eval(f'instance.{attr}')):
                 return False
 
         return True
@@ -74,16 +73,16 @@ class Subcriptable(type):
 
         for attr1, attr2 in zip(dtypes, cls._attrs.keys()):
             if isinstance(attr1, Constant):
-                _dict['_attrs'][attr2] = Range(f"[{attr1.value},{attr1.value}]")
+                _dict['_attrs'][attr2] = RangeSet(Range(f"[{attr1.value},{attr1.value}]"))
             else:
                 attr1.attr = attr2
+        _dict['_ranges'] = RangeList(RangeDict(_dict['_attrs']))
 
         dtype = DependentType.__new__(self, self.__name__, (), _dict)
 
         vars   = { attr: f'var_{i}' for i, attr in enumerate(dtype._attrs) } 
-        ranges = { vars[attr]: rng  for attr, rng in dtype._attrs.items() }
+        ranges = deepcopy(dtype._ranges)
         ctx    = { 'vars': vars, 'ranges': ranges }
-        
 
         if contraint:
             print(f'\n{ctx}')

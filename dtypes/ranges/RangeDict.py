@@ -11,6 +11,7 @@ class RangeDict:
         if isinstance(__dict, RangeDict):
             self.dict = deepcopy(__dict.dict)
         else:
+            print(type(__dict))
             self.dict = {
                 var: RangeSet(rng) if isinstance(rng, Range) else rng   
                 for var, rng in __dict.items()

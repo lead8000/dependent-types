@@ -32,10 +32,10 @@ def test_7():
     assert issubclass( Matrix[N, M | (N < 100)], \
                        Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N < 100) & ( M < 51))  )])
     
-test_1()
-test_2()
-# test_3()
-test_4()
-test_5()
-test_6()
-test_7()
+# test_1()
+# test_2()
+# # test_3()
+# test_4()
+# test_5()
+# test_6()
+# test_7()
