@@ -82,7 +82,7 @@ class Subcriptable(type):
         i = 0
         dtypes = []
         predicate = None
-
+        print(item)
         if isinstance(item, BitOr):
             dtypes.append(item.left)
             predicate = item.right
@@ -96,16 +96,14 @@ class Subcriptable(type):
                 elif isinstance(item[i], AST): 
                     dtypes.append(item[i])
                 i += 1
-
+        # #print(item)
+        print(dtypes, predicate)
         _dict = { k: v for k, v in cls.__dict__.items() }
         _dict['dtypes'] = dtypes
         _dict['base_type'] = cls
         _dict['predicate'] = predicate
 
         newcls = DependentType.__new__(self, self.__name__, (), _dict)
-
-        print(newcls.attrs)
-        print(newcls.base_type.attrs)
 
         return newcls
 

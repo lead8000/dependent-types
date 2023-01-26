@@ -8,11 +8,14 @@ class TypeInference(GenericVisitor):
 
     def get(self, dtype, ctx = {}):
 
-        print(f'{dtype.__dict__}')
+        # print(f'{dtype.__dict__}\n\n{ctx}\n')
+
+        for attr in dtype.attrs:
+            ...
 
         return self.visit(dtype.predicate, ctx)
 
-    @visualizer(False)
+    @visualizer(True)
     def visit(self, dtype, ctx={}):
         return super().visit(dtype, ctx)
 
@@ -113,7 +116,7 @@ class TypeInference(GenericVisitor):
 
             ctx_copy['ranges'] = ctx_left['ranges'] | ctx_right['ranges']
 
-            print(f'\n\n{ ctx_copy }\n\n')
+            ##print(f'\n\n{ ctx_copy }\n\n')
 
             return ctx_copy
 
@@ -136,12 +139,12 @@ class TypeInference(GenericVisitor):
 
             ctx_copy['ranges'] = ctx_left['ranges'] & ctx_right['ranges']
 
-            print(f'\n\n{ ctx_copy }\n\n')
+            ##print(f'\n\n{ ctx_copy }\n\n')
 
             return ctx_copy
 
-    # def visit_Attr(self, dtype, ctx = {}):
-    #     ...
+    def visit_Constant(self, dtype, ctx = {}):
+        print(dtype)
 
     # def visit_Mul(self, dtype, ctx = {}):
     #     ...

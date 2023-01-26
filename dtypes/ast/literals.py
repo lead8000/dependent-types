@@ -35,7 +35,6 @@ class Constant(AST):
         return Constant(self.value ** other.value)
     @visualizer
     def __eq__(self, other: 'Constant') -> bool:
-        #print(self, other)
         return self.value == other.value
     @visualizer
     def __ne__(self, other: 'Constant') -> bool:
@@ -45,7 +44,7 @@ class Constant(AST):
         return self.value < other.value
     @visualizer
     def __gt__(self, other: 'Constant') -> bool:
-        #print(self, other)
+        ###print(self, other)
         return self.value > other.value
     @visualizer
     def __le__(self, other: 'Constant') -> bool:
@@ -57,8 +56,6 @@ class Constant(AST):
 class Num(Constant):...
 
 class Bool(Constant):...
-
-class _(Constant):...
 
 class Attr(AST):
     """
@@ -86,7 +83,7 @@ class Attr(AST):
     def __ne__(self, other: 'Attr') -> AST:
         if isinstance(other, (int, float)):
             other = Num(other)
-        #print('YYYYYYYYEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSS')
+        ###print('YYYYYYYYEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSS')
         return Ne(self, other)
     
     def __lt__(self, other: 'Attr') -> AST:
@@ -165,12 +162,4 @@ class Attr(AST):
     def __rpow__(self, other: 'Attr') -> AST:
         return self ** other
 
-class AttrVar(AST):
-    """
-        Attribute node.
-    """
-    def __new__(self, name):
-        return super().__new__(self, f"AttrVar_{name}", (), {})
-
-    def __init__(self, name):
-        self.name = name
+_ = Attr(...)

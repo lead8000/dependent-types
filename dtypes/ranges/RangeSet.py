@@ -137,7 +137,7 @@ class RangeSet(Iterable):
         # while inserted_node.prev and (prev_union := inserted_node.value.union(inserted_node.prev.value)):
         #     inserted_node.value = prev_union
         #     self._ranges.pop_before(inserted_node)
-        # ##print(inserted_node.__dict__)
+        # ####print(inserted_node.__dict__)
         # while inserted_node.next and (next_union := inserted_node.value.union(inserted_node.next.value)):
         #     inserted_node.value = next_union
         #     self._ranges.pop_after(inserted_node)
@@ -455,7 +455,7 @@ class RangeSet(Iterable):
             if prev_range.intersection(next_range) is not None:
                 new_range = prev_range.union(next_range)
 
-            # ##print(next_range)
+            # ####print(next_range)
             if new_range is not None:  # TODO python 3.8 refactoring - this is a great place for :=
                 node.value = new_range
                 ranges.pop_after(node)

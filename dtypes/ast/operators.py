@@ -9,7 +9,7 @@ class BinOp(AST):
         return super().__new__(cls, f'{cls.__name__}_Node', right=right, left=left, **dict)
 
     def __init__(self, left, right):
-        ##print(f'\nINIT={self} LEFT={left} RIGHT={right}\n')
+        ####print(f'\nINIT={self} LEFT={left} RIGHT={right}\n')
         self.left = left
         self.right = right
 
@@ -57,8 +57,9 @@ class And(BinOp):
     # def __rand__(self, other):
     #     return And(self, other)
     # @visualizer
-    # def __ror__(self, other):
-    #     return Or(self, other)
+    def __ror__(self, other):
+        # print(self, other)
+        return Or(self, other)
 
 class Or(BinOp):
     @visualizer
@@ -113,19 +114,19 @@ class Ge(Statement):
 class Eq(Statement):
     @visualizer
     def eval(self):
-        #print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
+        ###print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
         return self.left.eval() == self.right.eval()
 
 class Ne(Statement):
     @visualizer
     def eval(self):
-        ##print(self.left, self.right)
+        ####print(self.left, self.right)
         return self.left.eval() != self.right.eval()
 
 class Add(BinOp):
     @visualizer
     def eval(self):
-        #print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
+        ###print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
         return self.left.eval() + self.right.eval()
 
 class Sub(BinOp):
