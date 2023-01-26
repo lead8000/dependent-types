@@ -1,4 +1,4 @@
-from dtypes import DependentType
+from dtypes import DependentType, _
 
 class Matrix(metaclass=DependentType):
 
@@ -13,3 +13,5 @@ class Matrix(metaclass=DependentType):
 
 Matrix |= 'amount_rows'
 Matrix |= 'amount_cols'
+
+class Matrix4x4(Matrix[_, 4]):...

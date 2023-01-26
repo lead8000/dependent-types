@@ -9,7 +9,6 @@ class BinOp(AST):
         return super().__new__(cls, f'{cls.__name__}_Node', right=right, left=left, **dict)
 
     def __init__(self, left, right):
-        ####print(f'\nINIT={self} LEFT={left} RIGHT={right}\n')
         self.left = left
         self.right = right
 
@@ -91,42 +90,26 @@ class Statement(BinOp):
     def __or__(self, other):
         return Or(self, other)
 
-class Lt(Statement):
-    @visualizer
-    def eval(self):
-        return self.left.eval() < self.right.eval()
+    def __ror__(self, other):
+        if isinstance(other, (int, float)):
+            other = ast.Constant(other)
+        return BitOr(other, self)
 
-class Gt(Statement):
-    @visualizer
-    def eval(self):
-        return self.left.eval() > self.right.eval()
+class Lt(Statement):...
 
-class Le(Statement):
-    @visualizer
-    def eval(self):
-        return self.left.eval() <= self.right.eval()
+class Gt(Statement):...
 
-class Ge(Statement):
-    @visualizer
-    def eval(self):
-        return self.left.eval() >= self.right.eval()
+class Le(Statement):... 
 
-class Eq(Statement):
-    @visualizer
-    def eval(self):
-        ###print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
-        return self.left.eval() == self.right.eval()
+class Ge(Statement):...
 
-class Ne(Statement):
-    @visualizer
-    def eval(self):
-        ####print(self.left, self.right)
-        return self.left.eval() != self.right.eval()
+class Eq(Statement):...
+
+class Ne(Statement):...
 
 class Add(BinOp):
     @visualizer
     def eval(self):
-        ###print(f'LEFT: {self.left.eval()} RIGHT: {self.right.eval()}')
         return self.left.eval() + self.right.eval()
 
 class Sub(BinOp):

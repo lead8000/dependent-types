@@ -3,13 +3,15 @@ from dtypes.visitor import TypeInference
 from dtypes.ranges import Range, RangeDict
 from sys import maxsize as oo
 from copy import deepcopy
+import dtypes
 
 class Checkable(type):
 
     def __instancecheck__(self, __instance) -> bool:
-        print(self._attrs)
+
         for attr in self._attrs:
-            if not self._attrs[attr].__contains__(__instance.__getattribute__(attr)):
+
+            if not self._attrs[attr].__contains__(__instance._attrs[attr]):
                 return False
 
         return True
@@ -61,29 +63,38 @@ class Subcriptable(type):
                     dtypes.append(Constant(token))
                 elif isinstance(token, AST): 
                     dtypes.append(token)
-
+        
         if len(dtypes) != len(cls._attrs):
             raise Exception("Missing or excess of dependent attributes.")
 
-        for attr1, attr2 in zip(dtypes, cls._attrs.keys()):
-            attr1.attr = attr2
-
-        _dict = { '_attrs': deepcopy(cls._attrs) }
+        _dict = { name: deepcopy(func) for name, func in cls.__dict__.items() 
+            if name not in ('__module__', '__weakref__', '__dict__') }
         _dict['base_type'] = cls
         _dict['contraint'] = contraint
+
+        for attr1, attr2 in zip(dtypes, cls._attrs.keys()):
+            if isinstance(attr1, Constant):
+                _dict['_attrs'][attr2] = Range(f"[{attr1.value},{attr1.value}]")
+            else:
+                attr1.attr = attr2
 
         dtype = DependentType.__new__(self, self.__name__, (), _dict)
 
         vars   = { attr: f'var_{i}' for i, attr in enumerate(dtype._attrs) } 
         ranges = { vars[attr]: rng  for attr, rng in dtype._attrs.items() }
         ctx    = { 'vars': vars, 'ranges': ranges }
-        # print(ctx)
-        ctx_result = TypeInference().get(dtype, ctx)
-        # print(ctx_result)
-        # return dtype
-        for attr,var in ctx_result['vars'].items():
-            dtype._attrs[attr] = ctx_result['ranges'][var]
+        
 
+        if contraint:
+            print(f'\n{ctx}')
+            ctx_result = TypeInference().get(dtype, ctx)
+
+            print(f'{ctx_result}\n')
+            for attr,var in ctx_result['vars'].items():
+                if ctx_result['ranges'][var]:
+                    dtype._attrs[attr] = ctx_result['ranges'][var]
+                else:
+                    raise Exception("The dependent type expresses an inconsistent state.")
         return dtype
 
     def __getitem__(cls, item):

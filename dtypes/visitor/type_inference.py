@@ -22,7 +22,7 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'][var] = Range(dtype.right.value, oo, include_start=False)
+            ctx_copy['ranges'][var] &= Range(dtype.right.value, oo, include_start=False)
             
             return ctx_copy
 
@@ -35,7 +35,7 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'][var] = Range(-oo, dtype.right.value, include_start=False)
+            ctx_copy['ranges'][var] &= Range(-oo, dtype.right.value, include_start=False)
             
             return ctx_copy
 
@@ -48,7 +48,7 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'][var] = Range(dtype.right.value, oo)
+            ctx_copy['ranges'][var] &= Range(dtype.right.value, oo)
             
             return ctx_copy
 
@@ -61,7 +61,7 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'][var] = Range(-oo, dtype.right.value, include_start=False, include_end=True)
+            ctx_copy['ranges'][var] &= Range(-oo, dtype.right.value, include_start=False, include_end=True)
             
             return ctx_copy
 
@@ -74,7 +74,7 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'][var] = Range(dtype.right.value, dtype.right.value, include_end=True)
+            ctx_copy['ranges'][var] &= Range(dtype.right.value, dtype.right.value, include_end=True)
             
             return ctx_copy
 
@@ -87,7 +87,7 @@ class TypeInference(GenericVisitor):
                 ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
             var = ctx_copy['vars'][dtype.left.attr]
-            ctx_copy['ranges'][var] = RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
+            ctx_copy['ranges'][var] &= RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
 
             return ctx_copy    
 
@@ -104,7 +104,7 @@ class TypeInference(GenericVisitor):
             ctx_left['ranges']  = RangeDict(ctx_left['ranges'])
             # print(f'bye! {ctx_right["ranges"]}')
             ctx_right['ranges'] = RangeDict(ctx_right['ranges'])
-            ctx_copy['ranges'] = ctx_left['ranges'] | ctx_right['ranges']
+            ctx_copy['ranges'] = (ctx_left['ranges'] | ctx_right['ranges'])
 
             # print(f'\n\n2 { ctx_copy }\n\n')
 
@@ -126,7 +126,7 @@ class TypeInference(GenericVisitor):
 
             return ctx_copy
 
-    # def visit_Mul(self, dtype, ctx = {}):
+    # def visit_Constant(self, dtype, ctx = {}):
     #     ...
 
     # def visit_Ne(self, dtype, ctx = {}):

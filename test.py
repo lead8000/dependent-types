@@ -1,4 +1,6 @@
-from dtypes.ranges import Range
+from dtypes.ast import Attr, Gt
 
-x = Range('[4,6)')
-print(x.__contains__(1))
+N = Attr()
+gt = Gt(N, 5)
+
+# a = 5 | gt
