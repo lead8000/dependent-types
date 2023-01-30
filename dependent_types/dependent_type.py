@@ -1,9 +1,9 @@
-from dependent_types.ast import AST, Attr, BitOr, Constant
+from dependent_types.ast import AST, BitOr, Constant
 from dependent_types.visitor import TypeInference
 from dependent_types.ranges import Range, RangeDict, RangeList, RangeSet
 from sys import maxsize as oo
 from copy import deepcopy
-import dependent_types
+
 
 class Checkable(type):
 

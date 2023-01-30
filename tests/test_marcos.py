@@ -1,4 +1,4 @@
-from matrix import Matrix
+from .matrix import Matrix
 from dependent_types import Attr, _
 
 m = Matrix([[23,3,5,43],[95,23,34,45],[93,12,23,43],[55,53,43,34]])
@@ -31,21 +31,3 @@ def test_6():
 def test_7(): 
     assert issubclass( Matrix[N, M | (N < 100)], \
                        Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N < 100) & ( M < 51))  )])
-    
-
-
-A = Matrix[ N, M | ( ((N < 80)  & ( M > 60)) | ( (N > 101) & ( M <49)) )]
-B = Matrix[ N, M | ( ((N < 100) & ( M > 50)) | ( (N > 100) & ( M <50))  )]
-
-print('yeyyeyyeye')
-
-print(A._ranges.list)
-print()
-print(B._ranges.list)
-# test_1()
-# test_2()
-test_3()
-# test_4()
-# test_5()
-# test_6()
-# test_7()

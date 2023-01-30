@@ -1,4 +1,4 @@
-from matrix import Matrix
+from .matrix import Matrix
 from dependent_types import Attr, _
 
 N = Attr()
