@@ -1,5 +1,5 @@
 from .base import AST, visualizer
-import dtypes.ast as ast
+import dependent_types.ast as ast
 
 class BinOp(AST):
     """

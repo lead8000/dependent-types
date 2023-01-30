@@ -1,5 +1,5 @@
 from matrix import Matrix
-from dtypes import Attr, _
+from dependent_types import Attr, _
 
 m = Matrix([[23,3,5,43],[95,23,34,45],[93,12,23,43],[55,53,43,34]])
 

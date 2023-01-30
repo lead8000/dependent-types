@@ -1,4 +1,4 @@
-from dtypes.ast import AST
+from dependent_types.ast import AST
 
 def visualizer(visualize = True):
     def inner(func):

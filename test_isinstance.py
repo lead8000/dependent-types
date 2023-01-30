@@ -1,5 +1,5 @@
 from matrix import Matrix
-from dtypes import Attr, _
+from dependent_types import Attr, _
 
 N = Attr()
 M = Attr()
@@ -10,8 +10,6 @@ m = Matrix(
      [84,23,54,23],
      [29,49,23,53]]
 )
-A = Matrix[ _, M | ( M > 50 ) ]
-
 
 def test_1():
     assert not isinstance(m, Matrix[ _, M | ( M > 50 ) ])

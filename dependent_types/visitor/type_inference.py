@@ -1,7 +1,7 @@
 from .generic import GenericVisitor, visualizer
-from dtypes.ranges import Range, RangeSet, RangeDict, RangeList
+from dependent_types.ranges import Range, RangeSet, RangeDict, RangeList
 from copy import deepcopy
-from dtypes.ast import Attr, Constant, Eq, Ne, Lt, Gt, Le, Ge, Or, And
+from dependent_types.ast import Attr, Constant, Eq, Ne, Lt, Gt, Le, Ge, Or, And
 from sys import maxsize as oo
 
 class TypeInference(GenericVisitor):

@@ -1,9 +1,9 @@
-from dtypes.ast import AST, Attr, BitOr, Constant
-from dtypes.visitor import TypeInference
-from dtypes.ranges import Range, RangeDict, RangeList, RangeSet
+from dependent_types.ast import AST, Attr, BitOr, Constant
+from dependent_types.visitor import TypeInference
+from dependent_types.ranges import Range, RangeDict, RangeList, RangeSet
 from sys import maxsize as oo
 from copy import deepcopy
-import dtypes
+import dependent_types
 
 class Checkable(type):
 
@@ -58,30 +58,30 @@ class Checkable(type):
 class Subcriptable(type):
 
     def __class_getitem__(self, cls, item) -> 'DependentType':
-        dtypes = []
+        dependent_types = []
         contraint = None
         
         if isinstance(item, BitOr):
-            dtypes.append(item.left)
+            dependent_types.append(item.left)
             contraint = item.right
         else:
             for token in item:
                 if isinstance(token, BitOr):
-                    dtypes.append(token.left)
+                    dependent_types.append(token.left)
                     contraint = token.right
                 elif isinstance(token, (int,float)):
-                    dtypes.append(Constant(token))
+                    dependent_types.append(Constant(token))
                 elif isinstance(token, AST): 
-                    dtypes.append(token)
+                    dependent_types.append(token)
         
-        if len(dtypes) != len(cls._attrs):
+        if len(dependent_types) != len(cls._attrs):
             raise Exception("Missing or excess of dependent attributes.")
 
         _dict = { name: deepcopy(func) for name, func in cls.__dict__.items() 
             if name not in ('__module__', '__weakref__', '__dict__') }
         _dict['base_type'] = cls
         _dict['contraint'] = contraint
-        for attr1, attr2 in zip(dtypes, cls._attrs.keys()):
+        for attr1, attr2 in zip(dependent_types, cls._attrs.keys()):
             _dict['_attrs'][attr2] = RangeSet(Range(f"({-oo},{oo})"))
             if isinstance(attr1, Constant):
                 _dict['_attrs'][attr2] = RangeSet(Range(f"[{attr1.value},{attr1.value}]"))

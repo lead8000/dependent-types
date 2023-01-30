@@ -1,5 +1,5 @@
 from matrix import Matrix, Matrix4x4
-from dtypes import Attr, _
+from dependent_types import Attr, _
 
 N = Attr()
 M = Attr('amount_cols')

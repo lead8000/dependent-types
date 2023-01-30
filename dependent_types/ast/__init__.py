@@ -8,4 +8,4 @@ __all__ = [
     "Ne", "Lt", "Le", "Gt", "Ge", "Mod", "Pow", "_",
     "Or", "And"
 ]
-name = "dtypes.ast"
+name = "dependent_types.ast"

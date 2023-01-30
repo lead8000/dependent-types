@@ -1,4 +1,4 @@
-from dtypes import DependentType, _
+from dependent_types import DependentType, _
 
 class Matrix(metaclass=DependentType):
 
