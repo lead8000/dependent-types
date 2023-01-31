@@ -52,8 +52,6 @@ class Contraints:
                         except ValueError:
                             added = True
 
-                        print(f'\n\nPINGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n{union.__contraints__}\n\n')
-
                         if not added:
                             dict12 = deepcopy(union_copy[i])
                             dict12[attr] = value1 | value2
@@ -80,7 +78,7 @@ class Contraints:
             if first:
                 first = False
             else:
-                _str += f', '
+                _str += ', '
             _str += f'{contr}'
         return f'Contraints[ {_str} ]'
     

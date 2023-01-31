@@ -53,8 +53,6 @@ class AttributeDict:
 
     def __eq__(self, other) -> bool:
         
-        print(f'EQUAL {self} == {other} ???')
-        # print(self, other) 
         try:
             for attr, value in self.__attribute_dict__.items():    
                 if value == RangeSet(f'({-oo}, {oo})'): continue

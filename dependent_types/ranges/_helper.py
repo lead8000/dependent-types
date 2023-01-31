@@ -265,7 +265,7 @@ class _LinkedList(Iterable[T]):
             self.insert_after(self.node_at(index), value)
 
     def pop_node(self, node):
-        if not (node.parent is self):
+        if node.parent is not self:
             raise ValueError("Given node does not belong to this list")
         if node is self.first:
             return self.pop(0)

@@ -1,9 +1,10 @@
-from .base import AST, visualizer
+from .base import AST
 from .literals import Constant, Attr, _
-from .operators import BitOr, Add, Sub, Mul, TrueDiv, FloorDiv, Eq, Ne, Lt, Le, Gt, Ge, Mod, Pow, Or, And
+from .operators import BitOr, Add, Sub, Mul, TrueDiv, FloorDiv, Eq, \
+                       Ne, Lt, Le, Gt, Ge, Mod, Pow, Or, And
 
 __all__ = [
-    "Constant", "AST", "Attr", "BitOr", "visualizer",
+    "Constant", "AST", "Attr", "BitOr",
     "Add", "Sub", "Mul", "TrueDiv", "FloorDiv", "Eq",
     "Ne", "Lt", "Le", "Gt", "Ge", "Mod", "Pow", "_",
     "Or", "And"

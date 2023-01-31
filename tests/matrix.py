@@ -2,10 +2,10 @@ from dependent_types import DependentType, _
 
 class Matrix(metaclass=DependentType):
 
-    def __init__(self, l):
-        self.list = l
-        self.amount_rows = len(l)
-        self.amount_cols = len(l[0])
+    def __init__(self, _list):
+        self.list = _list
+        self.amount_rows = len(_list)
+        self.amount_cols = len(_list[0])
         self.len = len(self)
     
     def __len__(self):

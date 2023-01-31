@@ -3,14 +3,16 @@ from dependent_types.ast import AST
 def visualizer(visualize = True):
     def inner(func):
         def decorator(_, node, ctx = {}):        
+            name = node.__class__.__name__.upper()
+
             if visualize:
-                print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
+                print(f'\n<--- {name} --->\n\nCONTEXT: {ctx}\n')
                 print(f'{node._fields}')
             
             result = func(_, node, ctx)
             
             if visualize:
-                print(f'\nRESULT OF {node.__class__.__name__.upper()}: {result}\n')
+                print(f'\nRESULT OF {name}: {result}\n')
 
             return result
         return decorator

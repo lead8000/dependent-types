@@ -1,5 +1,6 @@
-from .base import AST, visualizer
-from .operators import BitOr, Add, Sub, Mul, TrueDiv, FloorDiv, Eq, Ne, Lt, Le, Gt, Ge, Mod, Pow
+from .base import AST
+from .operators import BitOr, Add, Sub, Mul, TrueDiv, FloorDiv, \
+                       Eq, Ne, Lt, Le, Gt, Ge, Mod, Pow
 
 class Constant(AST):
     """
@@ -7,49 +8,49 @@ class Constant(AST):
     """
     def __new__(self, literal):
         return super().__new__(self, f'Constant_{literal}', value=literal)
+    
     def __init__(self, literal):
         self.value = literal
-    @visualizer
+    
     def eval(self):
         return self
-    @visualizer
+    
     def __add__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value + other.value)
-    @visualizer
+
     def __sub__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value - other.value)
-    @visualizer
+
     def __mul__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value * other.value)
-    @visualizer
+
     def __truediv__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value / other.value)
-    @visualizer
+
     def __floordiv__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value // other.value)
-    @visualizer
+
     def __mod__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value % other.value)
-    @visualizer
+
     def __pow__(self, other: 'Constant') -> 'Constant':
         return Constant(self.value ** other.value)
-    @visualizer
+
     def __eq__(self, other: 'Constant') -> bool:
         return self.value == other.value
-    @visualizer
+
     def __ne__(self, other: 'Constant') -> bool:
         return self.value != other.value
-    @visualizer
+
     def __lt__(self, other: 'Constant') -> bool:
         return self.value < other.value
-    @visualizer
+
     def __gt__(self, other: 'Constant') -> bool:
-        ####print(self, other)
         return self.value > other.value
-    @visualizer
+
     def __le__(self, other: 'Constant') -> bool:
         return self.value <= other.value
-    @visualizer
+
     def __ge__(self, other: 'Constant') -> AST:
         return self.value >= other.value
 

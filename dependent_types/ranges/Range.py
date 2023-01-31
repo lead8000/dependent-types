@@ -229,7 +229,7 @@ class Range:
         try:
             if self.start > self.end:  # start != float('-inf') and end != float('inf') and
                 raise ValueError("start must be less than or equal to end")
-        except TypeError as _:
+        except TypeError:
             raise ValueError("start and end are not comparable types")
         # # if bounds are infinity, make sure those respective bounds are exclusive
         # if self.start in (float('-inf'), float('inf')):
