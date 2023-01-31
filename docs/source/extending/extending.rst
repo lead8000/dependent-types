@@ -21,6 +21,7 @@ Se necesita importar la metaclase :py:class:`~dependent_types.DependentType` del
 Hasta este momento se tiene declarada la clase :py:class:`Matrix` como tipo dependiente, pero no se tiene especificado cuáles son los atibutos dependientes de este tipo. Para esto se utiliza el operador `|=` que sirve para anotar los attributos que será dependientes, de la clase :py:class:`Matrix`.
 
 .. code-block:: python
+
     Matrix |= 'amount_rows'
     Matrix |= 'amount_cols'
 

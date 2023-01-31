@@ -4,6 +4,7 @@ Chequeo de restricciones de un tipo dependiente
 Para saber si una instancia concreta cumple con las restricciones del tipo dependiente se utiliza la función built-in :py:func:`isinstance`.
 
 .. code-block:: python
+    
     from dependent_types import Attr, _
 
     N = Attr('amount_rows')
