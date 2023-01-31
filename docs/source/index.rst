@@ -10,7 +10,7 @@ Welcome to dependent_types's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   Implement new dependent types/extending
+   extending/extending
 
 Indices and tables
 ==================
