@@ -1,7 +1,7 @@
 Conformidad de tipos dependientes
 =================================
 
-Para saber cuál es la relación de conformidad entre dos tipos dependientes se utiliza la función built-in :py:func:`issubclass(_subcls, _cls)`.
+Para saber cuál es la relación de conformidad entre dos tipos dependientes se utiliza la función built-in :py:func:`issubclass`.
 
 Primeramente se obtiene una referencia a los atributos dependientes de la clase :py:class:`Matrix` de la siguiente forma:
 

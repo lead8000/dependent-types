@@ -25,4 +25,4 @@ Hasta este momento se tiene declarada la clase :py:class:`Matrix` como tipo depe
     Matrix |= 'amount_cols'
 
 
-:warning: **OJO**: hay que tener en cuenta de aquí en adelante, el orden establecido de los atributos dependientes. A partir de ahora cuando se haga referencia al primer atributo dependiente se estará refiriendo al atributo ``amount_rows``, cuando se refiera al segundo a ``amount_cols``, etc.
+**OJO**: hay que tener en cuenta de aquí en adelante, el orden establecido de los atributos dependientes. A partir de ahora cuando se haga referencia al primer atributo dependiente se estará refiriendo al atributo ``amount_rows``, cuando se refiera al segundo a ``amount_cols``, etc.

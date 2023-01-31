@@ -12,6 +12,8 @@ Welcome to dependent_types's documentation!
 
    extending/extending
    isinstance/isinstance
+   issubclass/issubclass
+   goal/goal
 
 Indices and tables
 ==================
