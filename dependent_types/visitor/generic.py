@@ -6,7 +6,13 @@ def visualizer(visualize = True):
             if visualize:
                 print(f'\n<--- {node.__class__.__name__.upper()} --->\n\nCONTEXT: {ctx}\n')
                 print(f'{node._fields}')
-            return func(_, node, ctx)
+            
+            result = func(_, node, ctx)
+            
+            if visualize:
+                print(f'\nRESULT OF {node.__class__.__name__.upper()}: {result}\n')
+
+            return result
         return decorator
     return inner
 

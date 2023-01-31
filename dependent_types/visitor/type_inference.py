@@ -1,13 +1,15 @@
 from .generic import GenericVisitor, visualizer
-from dependent_types.ranges import Range, RangeSet, RangeDict, RangeList
+from dependent_types.ranges import Range, RangeSet
+from dependent_types.utils import Contraints, AttributeDict
 from copy import deepcopy
 from dependent_types.ast import Attr, Constant, Eq, Ne, Lt, Gt, Le, Ge, Or, And
 from sys import maxsize as oo
 
+
 class TypeInference(GenericVisitor):
 
     def get(self, dtype, ctx = {}):
-        return self.visit(dtype.contraint, ctx)
+        return self.visit(dtype.__contraints__, ctx)
 
     # @visualizer(True)
     def visit(self, dtype, ctx={}):
@@ -18,10 +20,9 @@ class TypeInference(GenericVisitor):
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
             ctx_copy = deepcopy(ctx)
 
-            var = ctx_copy['vars'][dtype.left.attr]
-            newDict = deepcopy(ctx['_model_dict'])
-            newDict[dtype.left.attr] =Range(dtype.right.value, oo, include_start=False)
-            ctx_copy['ranges'] &= RangeList(newDict)
+            attrDict = AttributeDict()
+            attrDict[dtype.left.attr] = RangeSet(f'({dtype.right.value}, {oo})')
+            ctx_copy['contraints'] = Contraints(attrDict)
             
             return ctx_copy
 
@@ -30,11 +31,10 @@ class TypeInference(GenericVisitor):
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
             ctx_copy = deepcopy(ctx)
 
-            var = ctx_copy['vars'][dtype.left.attr]
-            newDict = deepcopy(ctx['_model_dict'])
-            newDict[dtype.left.attr] = Range(-oo, dtype.right.value, include_start=False)
-            ctx_copy['ranges'] &= RangeList(newDict)
-            
+            attrDict = AttributeDict()
+            attrDict[dtype.left.attr] = RangeSet(f'({-oo}, {dtype.right.value})')
+            ctx_copy['contraints'] = Contraints(attrDict)
+
             return ctx_copy
 
     def visit_Ge(self, dtype, ctx = {}):
@@ -42,10 +42,9 @@ class TypeInference(GenericVisitor):
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
             ctx_copy = deepcopy(ctx)
 
-            var = ctx_copy['vars'][dtype.left.attr]
-            newDict = deepcopy(ctx['_model_dict'])
-            newDict[var] = Range(dtype.right.value, oo)
-            ctx_copy['ranges'] |= RangeList(newDict)
+            attrDict = AttributeDict()
+            attrDict[dtype.left.attr] = RangeSet(f'[{dtype.right.value},{oo})')
+            ctx_copy['contraints'] = Contraints(attrDict)
 
             return ctx_copy
 
@@ -54,14 +53,10 @@ class TypeInference(GenericVisitor):
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
             ctx_copy = deepcopy(ctx)
 
-            if dtype.left.attr not in ctx_copy['vars']:
-                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
-
-            var = ctx_copy['vars'][dtype.left.attr]
-            newDict = deepcopy(ctx['_model_dict'])
-            newDict[dtype.left.attr] = Range(-oo, dtype.right.value, include_end=True)
-            ctx_copy['ranges'] |= RangeList(newDict)
-            
+            attrDict = AttributeDict()
+            attrDict[dtype.left.attr] = RangeSet(f'({-oo},{dtype.right.value}]')
+            ctx_copy['contraints'] = Contraints(attrDict)
+           
             return ctx_copy
 
     def visit_Eq(self, dtype, ctx = {}):
@@ -69,28 +64,20 @@ class TypeInference(GenericVisitor):
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
             ctx_copy = deepcopy(ctx)
 
-            if dtype.left.attr not in ctx_copy['vars']:
-                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
-
-            var = ctx_copy['vars'][dtype.left.attr]
-            newDict = deepcopy(ctx['_model_dict'])
-            newDict[dtype.left.attr] = Range(dtype.right.value, dtype.right.value, include_end=True)
-            ctx_copy['ranges'] |= RangeList(newDict)
-            
+            attrDict = AttributeDict()
+            attrDict[dtype.left.attr] = RangeSet(f'[{dtype.right.value}, {dtype.right.value}]')
+            ctx_copy['contraints'] = Contraints(attrDict)
+                      
             return ctx_copy
 
     def visit_Ne(self, dtype, ctx = {}):
         
         if isinstance(dtype.left, Attr) and isinstance(dtype.right, Constant):
-
             ctx_copy = deepcopy(ctx)
-            if dtype.left.attr not in ctx_copy['vars']:
-                ctx_copy['vars'][dtype.left.attr] = f'var_{len(ctx_copy["vars"])}'
 
-            var = ctx_copy['vars'][dtype.left.attr]
-            newDict = deepcopy(ctx['_model_dict'])
-            newDict[dtype.left.attr] = RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
-            ctx_copy['ranges'] |= RangeList(newDict)
+            attrDict = AttributeDict()
+            attrDict[dtype.left.attr] = RangeSet(f"({-oo},{dtype.right.value})",f"({dtype.right.value},{oo})")
+            ctx_copy['contraints'] = Contraints(attrDict)
 
             return ctx_copy    
 
@@ -102,34 +89,21 @@ class TypeInference(GenericVisitor):
             
             ctx_left = self.visit(dtype.left, ctx_copy)
             ctx_right = self.visit(dtype.right, ctx_copy)
-            # #print(f'\n\n1 { ctx_left }\n  { ctx_right }\n\n')
             
-            # ctx_left['ranges']  = RangeList(RangeDict(ctx_left['ranges']))
-            # ctx_right['ranges'] = RangeList(RangeDict(ctx_right['ranges']))
-            ctx_copy['ranges']  = (ctx_left['ranges'] | ctx_right['ranges'])
-
-            # #print(f'\n\n2 { ctx_copy }\n\n')
+            ctx_copy['contraints']  = (ctx_left['contraints'] | ctx_right['contraints'])
 
             return ctx_copy
 
     def visit_And(self, dtype, ctx = {}):
         
-        if isinstance(dtype.left, (Attr, Eq, Ne, Lt, Gt, Le, Ge)) \
-        and isinstance(dtype.right, (Attr, Eq, Ne, Lt, Gt, Le, Ge)):
+        if isinstance(dtype.left, (Attr, Eq, Ne, Lt, Gt, Le, Ge, Or, And)) \
+        and isinstance(dtype.right, (Attr, Eq, Ne, Lt, Gt, Le, Ge, Or, And)):
             ctx_copy  = deepcopy(ctx)
             
             ctx_left  = self.visit(dtype.left, ctx_copy)
             ctx_right = self.visit(dtype.right, ctx_copy)
-            
-            # ctx_left['ranges']  = RangeList(RangeDict(ctx_left['ranges']))
-            # ctx_right['ranges'] = RangeList(RangeDict(ctx_right['ranges']))
 
-            ctx_copy['ranges'] = ctx_left['ranges'] & ctx_right['ranges']
+
+            ctx_copy['contraints'] = ctx_left['contraints'] & ctx_right['contraints']
 
             return ctx_copy
-
-    # def visit_Constant(self, dtype, ctx = {}):
-    #     ...
-
-    # def visit_Ne(self, dtype, ctx = {}):
-    #     ...

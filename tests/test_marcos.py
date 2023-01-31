@@ -3,8 +3,8 @@ from dependent_types import Attr, _
 
 m = Matrix([[23,3,5,43],[95,23,34,45],[93,12,23,43],[55,53,43,34]])
 
-N = Attr()
-M = Attr()
+N = Attr('amount_rows')
+M = Attr('amount_cols')
 
 def test_1():
     assert not issubclass(Matrix[ N, _ | (N < 100) & ( N > 50) ], Matrix[ _, M | ( M > 50 ) ])

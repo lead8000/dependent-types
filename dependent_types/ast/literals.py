@@ -83,7 +83,6 @@ class Attr(AST):
     def __ne__(self, other: 'Attr') -> AST:
         if isinstance(other, (int, float)):
             other = Num(other)
-        ####print('YYYYYYYYEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSSSSS')
         return Ne(self, other)
     
     def __lt__(self, other: 'Attr') -> AST:

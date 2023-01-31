@@ -1,8 +1,8 @@
 from .matrix import Matrix
 from dependent_types import Attr, _
 
-N = Attr()
-M = Attr()
+N = Attr('amount_rows')
+M = Attr('amount_cols')
 
 m = Matrix(
     [[43,23,54,22],
@@ -13,5 +13,3 @@ m = Matrix(
 
 def test_1():
     assert not isinstance(m, Matrix[ _, M | ( M > 50 ) ])
-
-test_1()

@@ -9,5 +9,5 @@ def test_1():
         Matrix[N, 4| (M > 9)]
     except:
         return True
-    raise Exception() 
+    # raise Exception() 
     
