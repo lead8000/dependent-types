@@ -11,6 +11,7 @@ Welcome to dependent_types's documentation!
    :caption: Contents:
 
    extending/extending
+   isinstance/isinstance
 
 Indices and tables
 ==================
