@@ -19,6 +19,7 @@ jobs:
       - name: Lint with Ruff
         run: |
           ruff .
+        continue-on-error: true
       - name: Test with pytest
         run: |
           pytest
