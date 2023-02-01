@@ -18,7 +18,7 @@ jobs:
           pip install pytest ruff
       - name: Lint with Ruff
         run: |
-          ruff .
+          ruff . --silent
         continue-on-error: true
       - name: Test with pytest
         run: |
