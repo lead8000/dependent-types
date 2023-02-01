@@ -11,6 +11,3 @@ class AST(type):
 
     def __setattr__(self, __name: str, __value):
         self.__dict__['_fields'][__name] = __value
-
-    @abstractmethod
-    def eval(self):...

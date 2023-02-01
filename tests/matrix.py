@@ -7,7 +7,7 @@ class Matrix(metaclass=DependentType):
         self.amount_rows = len(_list)
         self.amount_cols = len(_list[0])
         self.len = len(self)
-    
+
     def __len__(self):
         return sum([len(row) for row in self.list])
 

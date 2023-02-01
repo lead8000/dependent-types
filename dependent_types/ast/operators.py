@@ -45,9 +45,6 @@ class BitOr(BinOp):
 
 class And(BinOp):
 
-    def eval(self):
-        return self.left.eval() and self.right.eval()
-
     def __and__(self, other):
         return And(self, other)
 
@@ -58,9 +55,6 @@ class And(BinOp):
         return Or(self, other)
 
 class Or(BinOp):
-
-    def eval(self):
-        return self.left.eval() or self.right.eval()
 
     def __and__(self, other):
         return And(self, other)
@@ -101,37 +95,16 @@ class Eq(Statement):...
 
 class Ne(Statement):...
 
-class Add(BinOp):
+class Add(BinOp):...
 
-    def eval(self):
-        return self.left.eval() + self.right.eval()
+class Sub(BinOp):...
 
-class Sub(BinOp):
+class Mul(BinOp):...
 
-    def eval(self):
-        return self.left.eval() - self.right.eval()
+class TrueDiv(BinOp):...
 
-class Mul(BinOp):
+class FloorDiv(BinOp):...
 
-    def eval(self):
-        return self.left.eval() * self.right.eval()
+class Mod(BinOp):...
 
-class TrueDiv(BinOp):
-
-    def eval(self):
-        return self.left.eval() / self.right.eval()
-
-class FloorDiv(BinOp):
-
-    def eval(self):
-        return self.left.eval // self.right.eval()
-
-class Mod(BinOp):
-
-    def eval(self):
-        return self.left.eval() % self.right.eval()
-    
-class Pow(BinOp):
-
-    def eval(self):
-        return self.left.eval() ** self.right.eval()
+class Pow(BinOp):...

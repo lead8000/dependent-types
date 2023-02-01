@@ -6,7 +6,7 @@ from copy import deepcopy
 class Checkable(type):
 
     def __instancecheck__(self, instance) -> bool:
-        
+
         for dict in self.__contraints__:
             for attr in self.__dependent_attrs__:
                 if not dict.__contains__(attr, instance.__getattribute__(attr)):
