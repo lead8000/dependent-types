@@ -1,7 +1,7 @@
 # Dependent Types
 
-El tema del tipado dependiente cada vez se hace más popular hoy en día. Algunos lenguajes modernos como Scala lo incorporan y se lo utilizan para hacer AutoML principalmente.
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg?label=license)](https://opensource.org/licenses/MIT) [![Last commit](https://img.shields.io/github/last-commit/leandro-driguez/dependent-types.svg?style=flat)](https://github.com/leandro-driguez/dependent-types/commits) [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/leandro-driguez/dependent-types)](https://github.com/leandro-driguez/dependent-types/commits) [![Github Stars](https://img.shields.io/github/stars/leandro-driguez/dependent-types?style=flat&logo=github)](https://github.com/leandro-driguez/dependent-types) [![Github Forks](https://img.shields.io/github/forks/leandro-driguez/dependent-types?style=flat&logo=github)](https://github.com/leandro-driguez/dependent-types) [![Github Watchers](https://img.shields.io/github/watchers/leandro-driguez/dependent-types?style=flat&logo=github)](https://github.com/leandro-driguez/dependent-types) [![GitHub contributors](https://img.shields.io/github/contributors/leandro-driguez/dependent-types)](https://github.com/leandro-driguez/dependent-types/graphs/contributors) [![Test Core (main branch)](https://github.com/leandro-driguez/dependent-types/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/leandro-driguez/dependent-types/actions/workflows/tests.yml)
 
-Este proyecto tiene como objetivo final aportar una herramienta lo suficientemente útil para la optimización de flujos de pipelines en AutoML.
+Este proyecto tiene como objetivo principal construir una herramienta útil para la optimización de pipelines en `AutoML`.
 
-La documentación está disponible [aquí](./docs/introduction.md).
+Para más información puede consultar la [documentación oficial](https://dependent-types.readthedocs.io/en/latest).
