@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'dependent_types'
-copyright = '2023, Leandro Rodriguez'
-author = 'Leandro Rodriguez'
+copyright = '2023, Leandro Rodriguez & Marcos Tirador'
+authors = 'Leandro Rodriguez & Marcos Tirador'
 release = '0.1.0'
 
 
