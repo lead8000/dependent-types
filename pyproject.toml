@@ -2,7 +2,7 @@
 name = "dependent-types"
 version = "0.1.0"
 description = ""
-authors = ["leandro-driguez <leandro_driguez@outlook.com>"]
+authors = ["leandro-driguez <leandro_driguez@outlook.com>", "MarcosTirador <marcosmath44@gmail.com>"]
 readme = "README.md"
 packages = [{include = "dependent_types"}]
 
